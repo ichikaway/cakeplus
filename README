@@ -1,4 +1,10 @@
-Cake plus
- -Validation: Multi byte character number check validation
+Cake plus is cakephp plugin and provides some functions for CakePHP.
+
+We will provide functions as follow.
+ -Validation: Check number of Multi byte character. 
+              Check difference between 2 fields.
+	      Check Japanese Katakana only input.
+	      Check space and Multibyte space only input.
+
  -FormScreen: Auto add hidden tag for confirm screen
  
