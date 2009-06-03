@@ -27,7 +27,7 @@
  *			"rule3" => array('rule' => array('minLengthJP', 2),
  * 				'message' => '2文字以上です'
  * 			),
- *			"rule4" => array('rule' => array('checkCompare', '_conf',null),
+ *			"rule4" => array('rule' => array('checkCompare', '_conf'),
  * 				'message' => '値が違います'
  * 			),
  * 			"rule5" => array('rule' => array('space_only'),
@@ -100,7 +100,7 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * 利用例 modelファイルのバリデーション定義にてemailとemail_confフィールドの比較
 	 * 	var $validate = array(
 	 *		'email' => array(
-	 *			"rule1" => array('rule' => array('checkCompare', '_conf', null ),
+	 *			"rule1" => array('rule' => array('checkCompare', '_conf' ),
 	 *				'message' => '【メールアドレス】 と【メールアドレス(確認)】の内容が異なります'
 	 *			),
 	 * 		),
@@ -109,10 +109,9 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * @param array $this_data
 	 * @param array $wordvalue
 	 * @param string $suffix
-	 * @param string $modelname モデル名が異なる場合 model名を指定しない場合もnullは必須
 	 * @return boolean
 	 */
-	function checkCompare( $this_data, $wordvalue , $suffix ,$modelname=null ){
+	function checkCompare( $this_data, $wordvalue , $suffix  ){
 
 		$fieldname = key($wordvalue);
 		$this_name = $this_data->name;
