@@ -18,7 +18,7 @@
  * 各モデルファイルで、下記のように使う。app_modelにactsAsで指定しても可
  *	var $actsAs = array('Cakeplus.AddValidationRule');
  *
- * バリデーションの書き方は下記を参考に。
+ * 各モデルファイル内のバリデーションの書き方は下記を参考に。
  * 	var $validate = array(
  * 		'test' => array(
  *			"rule2" => array('rule' => array('maxLengthJP', 5),
@@ -47,15 +47,6 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	/**
 	 * マルチバイト用バリデーション　文字数上限チェック
 	 *
-	 * 利用例 modelファイルのバリデーション定義にて
-	 * 	var $validate = array(
-	 *		'name' => array(
-	 *			"rule1" => array('rule' => array('maxLengthJP', 10),
-	 *				'message' => 'お名前は10文字以内です。'
-	 *			),
-	 * 		),
-	 *	);
-	 *
 	 * @param array $this_data
 	 * @param array $wordvalue
 	 * @param int $length
@@ -72,15 +63,6 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	/**
 	 * マルチバイト用バリデーション　文字数下限チェック
 	 *
-	 * 利用例 modelファイルのバリデーション定義にて
-	 * 	var $validate = array(
-	 *		'account' => array(
-	 *			"rule1" => array('rule' => array('minLengthJP', 5 ),
-	 *				'message' => 'アカウント名は5文字以上です。'
-	 *			),
-	 * 		),
-	 *	);
-	 *
 	 * @param array $this_data
 	 * @param array $wordvalue
 	 * @param int $length
@@ -96,15 +78,6 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * フィールド値の比較
 	 * emailとemail_confフィールドを比較する場合などに利用
 	 * _confは$suffixによって変更可能
-	 *
-	 * 利用例 modelファイルのバリデーション定義にてemailとemail_confフィールドの比較
-	 * 	var $validate = array(
-	 *		'email' => array(
-	 *			"rule1" => array('rule' => array('checkCompare', '_conf' ),
-	 *				'message' => '【メールアドレス】 と【メールアドレス(確認)】の内容が異なります'
-	 *			),
-	 * 		),
-	 *	);
 	 *
 	 * @param array $this_data
 	 * @param array $wordvalue
@@ -129,14 +102,6 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	/**
 	 * 全角カタカナ以外が含まれていればエラーとするバリデーションチェック
 	 *
-	 * 	var $validate = array(
-	 *		'text' => array(
-	 *			"rule1" => array('rule' => array('katakana_only' ),
-	 *				'message' => 'カタカナのみご入力下さい'
-	 *			),
-	 * 		),
-	 *	);
-	 *
 	 *
 	 * @param array $this_data
 	 * @param array $wordvalue
@@ -158,14 +123,6 @@ class AddValidationRuleBehavior extends ModelBehavior {
 
 	/**
 	 * 全角、半角スペースのみであればエラーとするバリデーションチェック
-	 *
-	 * 	var $validate = array(
-	 *		'text' => array(
-	 *			"rule1" => array('rule' => array('space_only' ),
-	 *				'message' => 'スペース以外も入力下さい'
-	 *			),
-	 * 		),
-	 *	);
 	 *
 	 * @param array $this_data
 	 * @param array $wordvalue
