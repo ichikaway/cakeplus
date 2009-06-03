@@ -116,11 +116,6 @@ class AddValidationRuleBehavior extends ModelBehavior {
 		$fieldname = key($wordvalue);
 		$this_name = $this_data->name;
 
-		if( !empty( $modelname ) ){
-			$this_name = $modelname;
-		}
-
-
 		if( $this_data->data[$this_name][$fieldname] === $this_data->data[$this_name][ $fieldname . $suffix ]){
 			return true;
 		}
