@@ -43,6 +43,11 @@
  */
 class AddValidationRuleBehavior extends ModelBehavior {
 
+    function setup(&$model, $config = array())
+    {
+        $this->settings = $config;
+    }
+
 
 	/**
 	 * マルチバイト用バリデーション　文字数上限チェック
