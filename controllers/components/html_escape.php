@@ -56,6 +56,7 @@ class HtmlEscapeComponent extends Object {
 			if( is_array($noescape_list) ){
 				foreach( $noescape_list as $noescape_value ){
 					$noescape_value = str_replace( ".", '\.' , $noescape_value );
+
 					if( preg_match( "/.*$noescape_value.*/", $parent_key ) ){
 						return $value;
 					}
