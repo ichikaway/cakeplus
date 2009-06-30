@@ -2,14 +2,26 @@
 
 
 /**
- * Formhidden Helper:
+ * Formhidden Helper: construct html hidden tag from Post data .
  *
- * Usage:
- * in controller
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright 2009, Yasushi Ichikawa. (http://d.hatena.ne.jp/cakephper/)
+ * @link          http://d.hatena.ne.jp/cakephper/
+ * @package       cakeplus
+ * @subpackage    cakeplus
+ * @version       0.01
+ * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ *
+ *
+ * =====Usage=====
+ * //in controller
  *   var $helpers = array('Cakeplus.Formhidden');
  *
- * in view(ctp file)
+ * //in view(ctp file)
  *   <?php echo $formhidden->hiddenVars(); ?>
+ * ===============
  *
  */
 class FormhiddenHelper extends Helper {
