@@ -19,7 +19,7 @@
  * //in controller
  * var $components = array( 'Cakeplus.HtmlEscape' );
  *
- * $this->set('posts', $this->HtmlEscape->h($this->paginate( 'Post' ), array( 'Post.title') ) );
+ * $this->set('posts', $this->HtmlEscape->nl2br_h($this->paginate( 'Post' ),null, array( 'Post.title') ) );
  *
  * ===============
  *
@@ -37,17 +37,18 @@ class HtmlEscapeComponent extends Object {
      * Execute nl2br() and  h() to Array Data
      *
      * @param string or array $value
+     * @param string $charset
      * @param array $noescape_list
      * @param string $parent_key
      * @return string or array
      */
-	function h( $value, $noescape_list = null ,$parent_key = null ) {
+	function nl2br_h( $value, $charset = null , $noescape_list = null ,$parent_key = null ) {
 
 		if (is_array($value)) {
 			foreach ($value as $key => $val) {
 				$parent_key_arr = ( isset($parent_key) ) ? $parent_key . '.' . $key : $key ;
 
-				$value[$key] = self::h($val , $noescape_list , $parent_key_arr );
+				$value[$key] = self::nl2br_h($val , $charset , $noescape_list , $parent_key_arr );
 			}
 			return $value;
 
@@ -57,12 +58,12 @@ class HtmlEscapeComponent extends Object {
 				foreach( $noescape_list as $noescape_value ){
 					$noescape_value = str_replace( ".", '\.' , $noescape_value );
 
-					if( preg_match( "/.*$noescape_value.*/", $parent_key ) ){
+					if( preg_match( "/^(.+\.|)$noescape_value(\..+|)$/", $parent_key ) ){
 						return $value;
 					}
 				}
 			}
-			$value = self::_nl2br_h( $value );
+			$value = self::_nl2br_h( $value, $charset );
 			return $value;
 		}
 	}
@@ -73,8 +74,8 @@ class HtmlEscapeComponent extends Object {
      * @param string $value
      * @return string
      */
-	function _nl2br_h( $value ){
-		return nl2br( h( $value ) );
+	function _nl2br_h( $value, $charset = null ){
+		return nl2br( h( $value, $charset ) );
 	}
 
 }
