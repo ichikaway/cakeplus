@@ -2,6 +2,8 @@
 
 /**
  * 独自のバリデーションルールを追加するbehavior プラグイン
+ * 内部文字コードはUTF-8（バリデーションで渡す文字データはUTF-8となります）
+ *
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
@@ -45,37 +47,36 @@ class AddValidationRuleBehavior extends ModelBehavior {
 
     function setup(&$model, $config = array())
     {
-        $this->settings = $config;
+        //$this->settings = $config;
+        mb_internal_encoding("UTF-8");
     }
 
 
 	/**
 	 * マルチバイト用バリデーション　文字数上限チェック
 	 *
-	 * @param array $this_data
+	 * @param array &$model
 	 * @param array $wordvalue
 	 * @param int $length
 	 * @return boolean
 	 */
-	function maxLengthJP( $this_data, $wordvalue, $length ) {
-
-		//$wordvalueは連想配列で渡されるためarray_shiftで対応
+	function maxLengthJP( &$model, $wordvalue, $length ) {
 		$word = array_shift($wordvalue);
-		return( mb_strlen( $word, mb_detect_encoding( $word ) ) <= $length );
-
+		//return( mb_strlen( $word, mb_detect_encoding( $word ) ) <= $length );
+		return( mb_strlen( $word ) <= $length );
 	}
 
 	/**
 	 * マルチバイト用バリデーション　文字数下限チェック
 	 *
-	 * @param array $this_data
+	 * @param array &$model
 	 * @param array $wordvalue
 	 * @param int $length
 	 * @return boolean
 	 */
-	function minLengthJP( $this_data, $wordvalue, $length ) {
+	function minLengthJP( &$model, $wordvalue, $length ) {
 		$word = array_shift($wordvalue);
-		return( mb_strlen( $word, mb_detect_encoding( $word ) ) >= $length );
+		return( mb_strlen( $word ) >= $length );
 	}
 
 
@@ -84,17 +85,16 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * emailとemail_confフィールドを比較する場合などに利用
 	 * _confは$suffixによって変更可能
 	 *
-	 * @param array $this_data
+	 * @param array &$model
 	 * @param array $wordvalue
 	 * @param string $suffix
 	 * @return boolean
 	 */
-	function checkCompare( $this_data, $wordvalue , $suffix  ){
+	function checkCompare( &$model, $wordvalue , $suffix  ){
 
 		$fieldname = key($wordvalue);
-		$this_name = $this_data->name;
 
-		if( $this_data->data[$this_name][$fieldname] === $this_data->data[$this_name][ $fieldname . $suffix ]){
+		if( $model->data[$model->alias][$fieldname] === $model->data[$model->alias][ $fieldname . $suffix ]){
 			return true;
 		}
 
@@ -108,15 +108,15 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * 全角カタカナ以外が含まれていればエラーとするバリデーションチェック
 	 *
 	 *
-	 * @param array $this_data
+	 * @param array &$model
 	 * @param array $wordvalue
 	 * @return boolean
 	 */
-	function katakana_only( $this_data, $wordvalue){
+	function katakana_only( &$model, $wordvalue){
 
 	    $value = array_shift($wordvalue);
 
-	    if( preg_match("/^[ア-ンヴァィゥェォャュョッー゛゜]*$/u", $value)){
+	    if( preg_match("/^[ァ-ヶー゛゜]*$/u", $value)){
 	        return true;
 	    }else{
 	        return false;
@@ -129,11 +129,11 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	/**
 	 * 全角、半角スペースのみであればエラーとするバリデーションチェック
 	 *
-	 * @param array $this_data
+	 * @param array &$model
 	 * @param array $wordvalue
 	 * @return boolean
 	 */
-	function space_only( $this_data, $wordvalue){
+	function space_only( &$model, $wordvalue){
 
 	    $value = array_shift($wordvalue);
 
@@ -143,6 +143,20 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	    }else{
 	        return true;
 	    }
+	}
+
+
+	/**
+	 * only Allow 0-9, a-z , A-Z
+	 *
+	 * @param array ref &$model
+	 * @param array $wordvalue
+	 * @return boolean
+	 */
+	function alpha_number( &$model, $wordvalue ){
+		$value = array_shift($wordvalue);
+		return preg_match( "/^[a-zA-Z0-9]*$/", $value );
+
 	}
 
 }
