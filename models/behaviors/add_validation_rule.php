@@ -90,7 +90,7 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * @param string $suffix
 	 * @return boolean
 	 */
-	function checkCompare( &$model, $wordvalue , $suffix  ){
+	function checkCompare( &$model, $wordvalue , $suffix = '_conf' ){
 
 		$fieldname = key($wordvalue);
 
