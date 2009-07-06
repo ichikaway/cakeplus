@@ -3,7 +3,8 @@ Cake plus is cakephp plugin and provides some functions for CakePHP.
 We will provide functions as follow.
 
 #Component
- -HtmlEscape: Execute Html Escape and nl2br to Array Data
+ -HtmlEscape: Execute Html Escape and nl2br to Array Data 
+             (Option: you can set no escape list in Array Data)
 
 
 #Behavior
