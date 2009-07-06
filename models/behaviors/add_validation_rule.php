@@ -94,11 +94,8 @@ class AddValidationRuleBehavior extends ModelBehavior {
 
 		$fieldname = key($wordvalue);
 
-		if( $model->data[$model->alias][$fieldname] === $model->data[$model->alias][ $fieldname . $suffix ]){
-			return true;
-		}
+		return ( $model->data[$model->alias][$fieldname] === $model->data[$model->alias][ $fieldname . $suffix ] );
 
-		return false;
 
 	}
 
@@ -116,11 +113,8 @@ class AddValidationRuleBehavior extends ModelBehavior {
 
 	    $value = array_shift($wordvalue);
 
-	    if( preg_match("/^[ァ-ヶー゛゜]*$/u", $value)){
-	        return true;
-	    }else{
-	        return false;
-	    }
+	    return preg_match("/^[ァ-ヶー゛゜]*$/u", $value);
+
 	}
 
 
