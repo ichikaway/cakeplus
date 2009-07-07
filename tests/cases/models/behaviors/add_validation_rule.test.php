@@ -40,7 +40,7 @@ class ValidationRule extends AddValidationRuleTestModel
 	 */
 	var $name = 'ValidationRule';
 	var $useTable = false;
-
+	var $useDbConfig = "test";
 
 
   	var $validate = array(
