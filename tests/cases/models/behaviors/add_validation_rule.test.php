@@ -1,7 +1,7 @@
 <?php
 
 //App::import('Behavior', 'add_validation_rule');
-App::import('Core', array('AppModel', 'Model'));
+//App::import('Core', array('AppModel', 'Model'));
 
 /**
  * Base model that to load AddValidationRule behavior on every test model.
@@ -9,8 +9,7 @@ App::import('Core', array('AppModel', 'Model'));
  * @package app.tests
  * @subpackage app.tests.cases.behaviors
  */
-//class AddValidationRuleTestModel extends CakeTestModel
-class AddValidationRuleTestModel extends AppModel
+class AddValidationRuleTestModel extends CakeTestModel
 {
 	/**
 	 * Behaviors for this model
@@ -95,24 +94,22 @@ class AddValidationRuleTestCase extends CakeTestCase
 	var $fixtures = null;
 
 
-    function startCase() {
-        echo '<h1>Starting Test Case</h1>';
-    }
+	function startCase() {
+		echo '<h2>Starting Test Case</h2>';
+		$this->ValidationRule =& ClassRegistry::init('ValidationRule');
+	}
 
-    function endCase() {
-        echo '<h1>Ending Test Case</h1>';
-    }
+	function endCase() {
+		echo '<h2>Ending Test Case</h2>';
+	}
 
-    function startTest($method) {
-        echo '<h3>Starting method '.$method.'</h3>';
+	function startTest($method) {
+		echo '<h3>Starting method '.$method.'</h3>';
+	}
 
-        $this->ValidationRule =& ClassRegistry::init('ValidationRule');
-
-    }
-
-    function endTest($method) {
-        echo '<hr/>';
-    }
+	function endTest($method) {
+		echo '<hr/>';
+	}
 
 
 
