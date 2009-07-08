@@ -43,35 +43,35 @@ class ValidationRule extends AddValidationRuleTestModel
 
 
   	var $validate = array(
- 		'hoge' => array(
+ 		'valuediff' => array(
  			"rule1" => array('rule' => array('checkCompare', '_conf'),
  				'message' => '【メールアドレス】 と【メールアドレス(確認)】の内容が異なります'
  			),
  		),
 
- 		'hoge2' => array(
+ 		'spaceonly' => array(
  			"rule5" => array('rule' => array('space_only'),
  				'message' => 'スペース以外も入力してください'
  			),
  		),
-  		'hoge3' => array(
+  		'alphanumber' => array(
   			"rule7" => array('rule' => array('alpha_number'),
  				'message' => '英数字のみで入力してください'
  			),
  		),
- 		'hoge4' => array(
+ 		'maxlengthjp' => array(
 			"rule2" => array('rule' => array('maxLengthJP', 10),
  				'message' => '10文字以内です'
  			),
 
  		),
- 		'hoge5' => array(
+ 		'minlengthjp' => array(
 			"rule3" => array('rule' => array('minLengthJP', 2),
  				'message' => '2文字以上です'
  			),
 
  		),
- 		'hoge6' => array(
+ 		'katakanaonly' => array(
   			"rule6" => array('rule' => array('katakana_only'),
  				'message' => 'カタカナのみ入力してください'
  			),
@@ -117,13 +117,13 @@ class AddValidationRuleTestCase extends CakeTestCase
 
 		$data = array(
 			'ValidationRule' => array(
-				'hoge'	=>	'a',
-				'hoge_conf'	=>	's',
-				'hoge2'	=>	' 　',
-				'hoge3'	=>	'あ',
-				'hoge4'	=>	'あああああああああああ',
-				'hoge5'	=>	'あ',
-				'hoge6'	=>	'あ',
+				'valuediff'	=>	'a',
+				'valuediff_conf'	=>	's',
+				'spaceonly'	=>	' 　',
+				'alphanumber'	=>	'あ',
+				'maxlengthjp'	=>	'あああああああああああ',
+				'minlengthjp'	=>	'あ',
+				'katakanaonly'	=>	'あ',
 
 			),
 		);
@@ -131,16 +131,14 @@ class AddValidationRuleTestCase extends CakeTestCase
 		$this->assertTrue( $this->ValidationRule->create( $data ) );
 
 		$this->assertFalse( $this->ValidationRule->validates() );
-		//pr($this->ValidationRule->validationErrors);
-		//pr($this->ValidationRule);
 
-		$this->assertTrue( array_key_exists("hoge" , $this->ValidationRule->validationErrors ) );
-		$this->assertTrue( array_key_exists("hoge2" , $this->ValidationRule->validationErrors ) );
-		$this->assertTrue( array_key_exists("hoge3" , $this->ValidationRule->validationErrors ) );
-		$this->assertTrue( array_key_exists("hoge4" , $this->ValidationRule->validationErrors ) );
-		$this->assertTrue( array_key_exists("hoge5" , $this->ValidationRule->validationErrors ) );
-		$this->assertTrue( array_key_exists("hoge6" , $this->ValidationRule->validationErrors ) );
-		//pr($this->ValidationRule);
+		$this->assertTrue( array_key_exists("valuediff" , $this->ValidationRule->validationErrors ) );
+		$this->assertTrue( array_key_exists("spaceonly" , $this->ValidationRule->validationErrors ) );
+		$this->assertTrue( array_key_exists("alphanumber" , $this->ValidationRule->validationErrors ) );
+		$this->assertTrue( array_key_exists("maxlengthjp" , $this->ValidationRule->validationErrors ) );
+		$this->assertTrue( array_key_exists("minlengthjp" , $this->ValidationRule->validationErrors ) );
+		$this->assertTrue( array_key_exists("katakanaonly" , $this->ValidationRule->validationErrors ) );
+
 	}
 
 
@@ -148,13 +146,13 @@ class AddValidationRuleTestCase extends CakeTestCase
 
 		$data = array(
 			'ValidationRule' => array(
-				'hoge'	=>	'あいうえお',
-				'hoge_conf'	=>	'あいうえお',
-				'hoge2'	=>	' 　ええ',
-				'hoge3'	=>	'onlyAlpharNumeric123456789',
-				'hoge4'	=>	'10ああああああああ',
-				'hoge5'	=>	'ああ',
-				'hoge6'	=>	'カタカナノミ',
+				'valuediff'	=>	'あいうえお',
+				'valuediff_conf'	=>	'あいうえお',
+				'spaceonly'	=>	' 　ええ',
+				'alphanumber'	=>	'onlyAlpharNumeric123456789',
+				'maxlengthjp'	=>	'10ああああああああ',
+				'minlengthjp'	=>	'あa',
+				'katakanaonly'	=>	'カタカナノミァィゥェォー゛゜',
 
 			),
 		);
@@ -163,14 +161,43 @@ class AddValidationRuleTestCase extends CakeTestCase
 		$this->assertTrue( $this->ValidationRule->validates() );
 
 
-		$this->assertFalse( array_key_exists("hoge" , $this->ValidationRule->validationErrors ) );
-		$this->assertFalse( array_key_exists("hoge2" , $this->ValidationRule->validationErrors ) );
-		$this->assertFalse( array_key_exists("hoge3" , $this->ValidationRule->validationErrors ) );
-		$this->assertFalse( array_key_exists("hoge4" , $this->ValidationRule->validationErrors ) );
-		$this->assertFalse( array_key_exists("hoge5" , $this->ValidationRule->validationErrors ) );
-		$this->assertFalse( array_key_exists("hoge6" , $this->ValidationRule->validationErrors ) );
+		$this->assertFalse( array_key_exists("valuediff" , $this->ValidationRule->validationErrors ) );
+		$this->assertFalse( array_key_exists("spaceonly" , $this->ValidationRule->validationErrors ) );
+		$this->assertFalse( array_key_exists("alphanumber" , $this->ValidationRule->validationErrors ) );
+		$this->assertFalse( array_key_exists("maxlengthjp" , $this->ValidationRule->validationErrors ) );
+		$this->assertFalse( array_key_exists("minlengthjp" , $this->ValidationRule->validationErrors ) );
+		$this->assertFalse( array_key_exists("katakanaonly" , $this->ValidationRule->validationErrors ) );
 	}
 
+
+
+	function testValidataion_spaceonly_alphanum_katakanaonly_Fail(){
+
+		$data = array(
+			'ValidationRule' => array(
+				'valuediff'	=>	'abcdefg 12345',
+				'valuediff_conf'	=>	'abcdefg 12345',
+				'spaceonly'	=>	'　',
+				'alphanumber'	=>	'only AlpharNumeric 123456789',
+				'maxlengthjp'	=>	'1234567abc',
+				'minlengthjp'	=>	'ab',
+				'katakanaonly'	=>	'ﾊﾝｶｸｶﾅ',
+
+			),
+		);
+
+
+		$this->assertTrue( $this->ValidationRule->create( $data ) );
+		$this->assertFalse( $this->ValidationRule->validates() );
+
+
+		$this->assertFalse( array_key_exists("valuediff" , $this->ValidationRule->validationErrors ) );
+		$this->assertTrue( array_key_exists("spaceonly" , $this->ValidationRule->validationErrors ) );
+		$this->assertTrue( array_key_exists("alphanumber" , $this->ValidationRule->validationErrors ) );
+		$this->assertFalse( array_key_exists("maxlengthjp" , $this->ValidationRule->validationErrors ) );
+		$this->assertFalse( array_key_exists("minlengthjp" , $this->ValidationRule->validationErrors ) );
+		$this->assertTrue( array_key_exists("katakanaonly" , $this->ValidationRule->validationErrors ) );
+	}
 }
 
 ?>
