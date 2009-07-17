@@ -12,7 +12,7 @@
  * @link          http://d.hatena.ne.jp/cakephper/
  * @package       cakeplus
  * @subpackage    cakeplus
- * @version       0.01
+ * @version       0.02
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  *
  *
@@ -37,6 +37,16 @@
  * 			),
  * 			"rule6" => array('rule' => array('katakana_only'),
  *				'message' => 'カタカナのみ入力してください'
+ * 			),
+ * 		),
+ * 	);
+ *
+ * Authコンポーネントでパスワードフィールドがハッシュ化されている場合は、
+ * checkCompareの第3配列にtrueを指定する
+ * 	var $validate = array(
+ * 		'password' => array(
+ *			"rule" => array('rule' => array('checkCompare', '_conf',true),
+ * 				'message' => '値が違います'
  * 			),
  * 		),
  * 	);
@@ -84,17 +94,24 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * フィールド値の比較
 	 * emailとemail_confフィールドを比較する場合などに利用
 	 * _confは$suffixによって変更可能
+	 * authにtrueを指定すると、Authコンポーネントのパスワードフィールドを前提として
+	 * 　比較するpassword_confフィールドの値をハッシュ化する
 	 *
 	 * @param array &$model
 	 * @param array $wordvalue
 	 * @param string $suffix
+	 * @param boolean $auth
 	 * @return boolean
 	 */
-	function checkCompare( &$model, $wordvalue , $suffix = '_conf' ){
+	function checkCompare( &$model, $wordvalue , $suffix = '_conf', $auth = false ){
 
 		$fieldname = key($wordvalue);
+		if( $auth === true ){
+			return ( $model->data[$model->alias][$fieldname] === Security::hash($model->data[$model->alias][ $fieldname . $suffix ], null, true) );
+		}else{
+			return ( $model->data[$model->alias][$fieldname] === $model->data[$model->alias][ $fieldname . $suffix ] );
+		}
 
-		return ( $model->data[$model->alias][$fieldname] === $model->data[$model->alias][ $fieldname . $suffix ] );
 
 
 	}

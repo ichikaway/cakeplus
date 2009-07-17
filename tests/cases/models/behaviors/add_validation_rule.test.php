@@ -1,7 +1,8 @@
 <?php
 
-//App::import('Behavior', 'add_validation_rule');
-//App::import('Core', array('AppModel', 'Model'));
+App::import('Component', 'Security');
+App::import('Component', 'Auth');
+
 
 /**
  * Base model that to load AddValidationRule behavior on every test model.
@@ -46,6 +47,11 @@ class ValidationRule extends AddValidationRuleTestModel
  		'valuediff' => array(
  			"rule1" => array('rule' => array('checkCompare', '_conf'),
  				'message' => '【メールアドレス】 と【メールアドレス(確認)】の内容が異なります'
+ 			),
+ 		),
+ 		'password' => array(
+ 			"rule1" => array('rule' => array('checkCompare', '_conf',true),
+ 				'message' => 'パスワード と パスワード(確認)の内容が異なります'
  			),
  		),
 
@@ -112,7 +118,7 @@ class AddValidationRuleTestCase extends CakeTestCase
 	}
 
 
-
+	//全てバリデーションに引っかかるテスト
 	function testValidataionAllFail(){
 
 		$data = array(
@@ -141,7 +147,7 @@ class AddValidationRuleTestCase extends CakeTestCase
 
 	}
 
-
+	//全てバリデーションで成功するテスト
 	function testValidataionAllSuccess(){
 
 		$data = array(
@@ -169,8 +175,7 @@ class AddValidationRuleTestCase extends CakeTestCase
 		$this->assertFalse( array_key_exists("katakanaonly" , $this->ValidationRule->validationErrors ) );
 	}
 
-
-
+	//spaceonly, alphanum, katakanaonlyフィールドのみバリデーションに引っかかるテスト
 	function testValidataion_spaceonly_alphanum_katakanaonly_Fail(){
 
 		$data = array(
@@ -198,6 +203,49 @@ class AddValidationRuleTestCase extends CakeTestCase
 		$this->assertFalse( array_key_exists("minlengthjp" , $this->ValidationRule->validationErrors ) );
 		$this->assertTrue( array_key_exists("katakanaonly" , $this->ValidationRule->validationErrors ) );
 	}
+
+
+	//Authコンポーネント系テスト
+	function testAuthHash(){
+		//passwordフィールドがハッシュ化されなかった場合はエラー
+		$data = array(
+			'ValidationRule' => array(
+				'password'	=>	'abc123',
+				'password_conf'	=>	'abc123',
+			),
+		);
+		$this->assertTrue( $this->ValidationRule->create( $data ) );
+		$this->assertFalse( $this->ValidationRule->validates() );
+		$this->assertTrue( array_key_exists("password" , $this->ValidationRule->validationErrors ) );
+
+
+		//AuthComponent::passwordを使ってハッシュ化　同一値でバリデーションエラーがないことを確認
+		$data = array(
+			'ValidationRule' => array(
+				'password'	=>	AuthComponent::password('abc123cvb'),
+				'password_conf'	=>	'abc123cvb',
+			),
+		);
+		$this->assertTrue( $this->ValidationRule->create( $data ) );
+		$this->assertTrue( $this->ValidationRule->validates() );
+		$this->assertFalse( array_key_exists("password" , $this->ValidationRule->validationErrors ) );
+
+
+		//AuthComponent::passwordを使ってハッシュ化　異なる値でバリデーションエラーを検地
+		$data = array(
+			'ValidationRule' => array(
+				'password'	=>	AuthComponent::password('abc123cvb'),
+				'password_conf'	=>	'hoge111',
+			),
+		);
+		$this->assertTrue( $this->ValidationRule->create( $data ) );
+		$this->assertFalse( $this->ValidationRule->validates() );
+		$this->assertTrue( array_key_exists("password" , $this->ValidationRule->validationErrors ) );
+	}
+
+
+
+
 }
 
 ?>
