@@ -231,7 +231,7 @@ class AddValidationRuleTestCase extends CakeTestCase
 		$this->assertFalse( array_key_exists("password" , $this->ValidationRule->validationErrors ) );
 
 
-		//AuthComponent::passwordを使ってハッシュ化　異なる値でバリデーションエラーを検地
+		//AuthComponent::passwordを使ってハッシュ化　異なる値でバリデーションエラーに引っかかるテスト
 		$data = array(
 			'ValidationRule' => array(
 				'password'	=>	AuthComponent::password('abc123cvb'),
