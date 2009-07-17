@@ -21,5 +21,5 @@ Todo:
 
 
 ===== Contributors ========================
-K1LoW : add feature of hash value check with AuthComponent in add_validation_rule::checkCompare
+K1LoW : feature of hash value check with AuthComponent in add_validation_rule::checkCompare
 
