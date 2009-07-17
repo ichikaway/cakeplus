@@ -18,3 +18,8 @@ Todo:
 #Helper
  -FormScreen: Auto add hidden tag for confirm screen
 
+
+
+===== Contributors ========================
+K1LoW : add feature of hash value check with AuthComponent in add_validation_rule::checkCompare
+
