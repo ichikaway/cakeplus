@@ -19,21 +19,39 @@
  * //in controller
  *   var $helpers = array('Cakeplus.Formhidden');
  *
- * //in view(ctp file)
+ * //in view(ctp file) Using $this->data
  *   <?php echo $formhidden->hiddenVars(); ?>
+ *
+ * //in view(ctp file) Using  $data_arr parameter
+ *   <?php echo $formhidden->hiddenVars($data_arr); ?>
+ *
  * ===============
  *
  */
 class FormhiddenHelper extends Helper {
     var $helpers = array('Form');
 
+    // String data of Hidden tags.
+    var $hidden_output = null;
 
-    function hiddenVars() {
-        if( empty($this->data) ){ return; }
 
-        $this->_createHidden( $this->data );
+    /**
+     * construct html hidden tag
+     *
+     * @param array $data_arr //if not set, using $this->data
+     * @return String
+     */
+    function hiddenVars( $data_arr = null ) {
 
-        return ;
+        if( empty($this->data) && empty($data_arr) ){ return; }
+
+        if( !is_array($data_arr) || empty($data_arr) ){
+        	$data_arr = $this->data;
+        }
+
+        $this->_createHidden( $data_arr );
+
+        return $this->hidden_output;
     }
 
 
@@ -46,7 +64,8 @@ class FormhiddenHelper extends Helper {
 			}
 
 		}else{
-			echo $this->Form->hidden( $parent_key )."\n";
+			$this->hidden_output .= $this->Form->hidden( $parent_key )."\n";
+
 		}
 
 	}
