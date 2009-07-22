@@ -20,6 +20,10 @@
  * 各モデルファイルで、下記のように使う。app_modelにactsAsで指定しても可
  *	var $actsAs = array('Cakeplus.AddValidationRule');
  *
+ * 内部文字コードを変更したい場合は、オプションで変更可能（デフォルトはUTF-8）
+ *	var $actsAs = array('Cakeplus.AddValidationRule' => array('encoding' => 'UTF-8') );
+ *
+ *
  * 各モデルファイル内のバリデーションの書き方は下記を参考に。
  * 	var $validate = array(
  * 		'test' => array(
@@ -55,11 +59,15 @@
  */
 class AddValidationRuleBehavior extends ModelBehavior {
 
-    function setup(&$model, $config = array())
-    {
-        //$this->settings = $config;
-        mb_internal_encoding("UTF-8");
-    }
+	function setup(&$model, $config = array()){
+
+		//
+		if( !empty( $config['encoding'] ) ){
+			mb_internal_encoding($config['encoding']);
+		}else{
+			mb_internal_encoding("UTF-8");
+		}
+	}
 
 
 	/**
