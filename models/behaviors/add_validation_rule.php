@@ -2,7 +2,9 @@
 
 /**
  * 独自のバリデーションルールを追加するbehavior プラグイン
- * 内部文字コードはUTF-8（バリデーションで渡す文字データはUTF-8となります）
+ * 内部文字コードはデフォルトUTF-8（オプションで変更可能）
+ * Behavior of some validation rules.
+ * Internal encoding is UTF-8, can change it with parameter.
  *
  *
  * Licensed under The MIT License
@@ -12,48 +14,52 @@
  * @link          http://d.hatena.ne.jp/cakephper/
  * @package       cakeplus
  * @subpackage    cakeplus
- * @version       0.02
+ * @version       0.03
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  *
  *
  * =====利用方法=====
  * 各モデルファイルで、下記のように使う。app_modelにactsAsで指定しても可
- *	var $actsAs = array('Cakeplus.AddValidationRule');
+ * In each model class or app_model, write code as follow.
+ *		var $actsAs = array('Cakeplus.AddValidationRule');
  *
  * 内部文字コードを変更したい場合は、オプションで変更可能（デフォルトはUTF-8）
- *	var $actsAs = array('Cakeplus.AddValidationRule' => array('encoding' => 'UTF-8') );
+ * If you want to change encoding(UTF-8), write code as follow.
+ *		var $actsAs = array('Cakeplus.AddValidationRule' => array('encoding' => 'EUC') );
  *
  *
  * 各モデルファイル内のバリデーションの書き方は下記を参考に。
- * 	var $validate = array(
- * 		'test' => array(
- *			"rule2" => array('rule' => array('maxLengthJP', 5),
- * 				'message' => '5文字以内です'
- * 			),
- *			"rule3" => array('rule' => array('minLengthJP', 2),
- * 				'message' => '2文字以上です'
- * 			),
- *			"rule4" => array('rule' => array('checkCompare', '_conf'),
- * 				'message' => '値が違います'
- * 			),
- * 			"rule5" => array('rule' => array('space_only'),
- * 				'message' => 'スペース以外も入力してください'
- * 			),
- * 			"rule6" => array('rule' => array('katakana_only'),
- *				'message' => 'カタカナのみ入力してください'
- * 			),
- * 		),
- * 	);
+ * Example: validation definition in a model.
+ * 		var $validate = array(
+ * 			'test' => array(
+ *				"rule2" => array('rule' => array('maxLengthJP', 5),
+ * 					'message' => '5文字以内です'
+ * 				),
+ *				"rule3" => array('rule' => array('minLengthJP', 2),
+ * 					'message' => '2文字以上です'
+ * 				),
+ *				"rule4" => array('rule' => array('checkCompare', 'test_conf'),
+ * 					'message' => '値が違います'
+ * 				),
+ * 				"rule5" => array('rule' => array('space_only'),
+ * 					'message' => 'スペース以外も入力してください'
+ * 				),
+ *	 			"rule6" => array('rule' => array('katakana_only'),
+ *					'message' => 'カタカナのみ入力してください'
+ *	 			),
+ *	 		),
+ *	 	);
  *
- * Authコンポーネントでパスワードフィールドがハッシュ化されている場合は、
- * checkCompareの第3配列にtrueを指定する
- * 	var $validate = array(
- * 		'password' => array(
- *			"rule" => array('rule' => array('checkCompare', '_conf',true),
- * 				'message' => '値が違います'
+ * Authコンポーネントでパスワードフィールドがハッシュ化されている場合は、checkCompareの第3配列にtrueを指定する
+ * Using Auth component, If you want compare password and password confirm field,
+ * set "true" in 3rd parameter of checkCompare validation, password_conf field is encrypted.
+ *	 	var $validate = array(
+ * 			'password' => array(
+ *				"rule" => array('rule' => array('checkCompare', 'password_conf',true),
+ * 					'message' => '値が違います'
+ * 				),
  * 			),
- * 		),
- * 	);
+ * 		);
  *
  *
  */
@@ -61,7 +67,7 @@ class AddValidationRuleBehavior extends ModelBehavior {
 
 	function setup(&$model, $config = array()){
 
-		//
+		//change encoding with parameter option.
 		if( !empty( $config['encoding'] ) ){
 			mb_internal_encoding($config['encoding']);
 		}else{
@@ -72,24 +78,25 @@ class AddValidationRuleBehavior extends ModelBehavior {
 
 	/**
 	 * マルチバイト用バリデーション　文字数上限チェック
+	 * check max length with Multibyte character.
 	 *
-	 * @param array &$model
-	 * @param array $wordvalue
-	 * @param int $length
+	 * @param array &$model  model object, automatically set
+	 * @param array $wordvalue  field value, automatically set
+	 * @param int $length max length number
 	 * @return boolean
 	 */
 	function maxLengthJP( &$model, $wordvalue, $length ) {
 		$word = array_shift($wordvalue);
-		//return( mb_strlen( $word, mb_detect_encoding( $word ) ) <= $length );
 		return( mb_strlen( $word ) <= $length );
 	}
 
 	/**
 	 * マルチバイト用バリデーション　文字数下限チェック
+	 * check min length with Multibyte character.
 	 *
-	 * @param array &$model
-	 * @param array $wordvalue
-	 * @param int $length
+	 * @param array &$model model object, automatically set
+	 * @param array $wordvalue field value, automatically set
+	 * @param int $length min length number
 	 * @return boolean
 	 */
 	function minLengthJP( &$model, $wordvalue, $length ) {
@@ -101,34 +108,35 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	/**
 	 * フィールド値の比較
 	 * emailとemail_confフィールドを比較する場合などに利用
-	 * _confは$suffixによって変更可能
-	 * authにtrueを指定すると、Authコンポーネントのパスワードフィールドを前提として
-	 * 　比較するpassword_confフィールドの値をハッシュ化する
+	 * $compare_filedに比較したいフィールド名をセットする（必須）
+	 * Compare 2 fields value. Example, email field and email_conf field.
+	 * Set field name for comparison in $compare_filed
 	 *
-	 * @param array &$model
-	 * @param array $wordvalue
-	 * @param string $suffix
-	 * @param boolean $auth
+	 * authにtrueを指定すると、Authコンポーネントのパスワードフィールドを前提として
+	 * 比較するpassword_confフィールドの値をハッシュ化する
+	 * If set "true" in $auth, $compare_filed is encrypted with Security::hash.
+	 *
+	 * @param array &$model  model object, automatically set
+	 * @param array $wordvalue  field value, automatically set
+	 * @param string $compare_filed  set field name for comparison
+	 * @param boolean $auth set true, $compare_filed is encrypted with Security::hash
 	 * @return boolean
 	 */
-	function checkCompare( &$model, $wordvalue , $suffix = '_conf', $auth = false ){
+	function checkCompare( &$model, $wordvalue , $compare_filed , $auth = false ){
 
 		$fieldname = key($wordvalue);
 		if( $auth === true ){
-			return ( $model->data[$model->alias][$fieldname] === Security::hash($model->data[$model->alias][ $fieldname . $suffix ], null, true) );
+			return ( $model->data[$model->alias][$fieldname] === Security::hash($model->data[$model->alias][ $compare_filed ], null, true) );
 		}else{
-			return ( $model->data[$model->alias][$fieldname] === $model->data[$model->alias][ $fieldname . $suffix ] );
+			return ( $model->data[$model->alias][$fieldname] === $model->data[$model->alias][ $compare_filed ] );
 		}
-
-
-
 	}
 
 
 
 	/**
 	 * 全角カタカナ以外が含まれていればエラーとするバリデーションチェック
-	 *
+	 * Japanese KATAKANA Validation
 	 *
 	 * @param array &$model
 	 * @param array $wordvalue
@@ -147,6 +155,7 @@ class AddValidationRuleBehavior extends ModelBehavior {
 
 	/**
 	 * 全角、半角スペースのみであればエラーとするバリデーションチェック
+	 * Japanese Space only validation
 	 *
 	 * @param array &$model
 	 * @param array $wordvalue
@@ -167,6 +176,7 @@ class AddValidationRuleBehavior extends ModelBehavior {
 
 	/**
 	 * only Allow 0-9, a-z , A-Z
+	 * check it including Multibyte characters.
 	 *
 	 * @param array ref &$model
 	 * @param array $wordvalue
