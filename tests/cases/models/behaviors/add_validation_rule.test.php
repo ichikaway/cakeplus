@@ -45,12 +45,12 @@ class ValidationRule extends AddValidationRuleTestModel
 
   	var $validate = array(
  		'valuediff' => array(
- 			"rule1" => array('rule' => array('checkCompare', 'valuediff_conf'),
+ 			"rule1" => array('rule' => array('compare2fields', 'valuediff_conf'),
  				'message' => '【メールアドレス】 と【メールアドレス(確認)】の内容が異なります'
  			),
  		),
  		'password' => array(
- 			"rule1" => array('rule' => array('checkCompare', 'password_conf',true),
+ 			"rule1" => array('rule' => array('compare2fields', 'password_conf',true),
  				'message' => 'パスワード と パスワード(確認)の内容が異なります'
  			),
  		),

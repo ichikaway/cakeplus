@@ -38,7 +38,7 @@
  *				"rule3" => array('rule' => array('minLengthJP', 2),
  * 					'message' => '2文字以上です'
  * 				),
- *				"rule4" => array('rule' => array('checkCompare', 'test_conf'),
+ *				"rule4" => array('rule' => array('compare2fields', 'test_conf'),
  * 					'message' => '値が違います'
  * 				),
  * 				"rule5" => array('rule' => array('space_only'),
@@ -50,12 +50,12 @@
  *	 		),
  *	 	);
  *
- * Authコンポーネントでパスワードフィールドがハッシュ化されている場合は、checkCompareの第3配列にtrueを指定する
+ * Authコンポーネントでパスワードフィールドがハッシュ化されている場合は、compare2fieldsの第3配列にtrueを指定する
  * Using Auth component, If you want compare password and password confirm field,
- * set "true" in 3rd parameter of checkCompare validation, password_conf field is encrypted.
+ * set "true" in 3rd parameter of compare2fields validation, password_conf field is encrypted.
  *	 	var $validate = array(
  * 			'password' => array(
- *				"rule" => array('rule' => array('checkCompare', 'password_conf',true),
+ *				"rule" => array('rule' => array('compare2fields', 'password_conf',true),
  * 					'message' => '値が違います'
  * 				),
  * 			),
@@ -122,7 +122,7 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * @param boolean $auth set true, $compare_filed is encrypted with Security::hash
 	 * @return boolean
 	 */
-	function checkCompare( &$model, $wordvalue , $compare_filed , $auth = false ){
+	function compare2fields( &$model, $wordvalue , $compare_filed , $auth = false ){
 
 		$fieldname = key($wordvalue);
 		if( $auth === true ){
