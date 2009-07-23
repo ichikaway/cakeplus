@@ -126,7 +126,8 @@ class AddValidationRuleBehavior extends ModelBehavior {
 
 		$fieldname = key($wordvalue);
 		if( $auth === true ){
-			return ( $model->data[$model->alias][$fieldname] === Security::hash($model->data[$model->alias][ $compare_filed ], null, true) );
+			App::import('Component','Auth');
+			return ( $model->data[$model->alias][$fieldname] === AuthComponent::password($model->data[$model->alias][ $compare_filed ]) );
 		}else{
 			return ( $model->data[$model->alias][$fieldname] === $model->data[$model->alias][ $compare_filed ] );
 		}
