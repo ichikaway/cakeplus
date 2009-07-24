@@ -8,13 +8,14 @@ We will provide functions as follow.
 
 
 #Behavior
- -Validation: Check number of Multi byte character.
-              Check difference between 2 fields.
-              Check Japanese Katakana only input.
-              Check space and Multibyte space only input.
+ -AddValidationRule: Check number of Multi byte character.
+                     Check difference between 2 fields.
+                     Check Japanese Katakana only input.
+                     Check space and Multibyte space only input.
+
+ -ValidationErrorI18n: set validation error messages with gettext __() 
 
 
-Todo:
 #Helper
  -FormScreen: Auto create hidden tag
 
