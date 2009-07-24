@@ -23,4 +23,5 @@ We will provide functions as follow.
 
 ===== Contributors ========================
 K1LoW : feature of hash value check with AuthComponent in add_validation_rule::checkCompare
+        Help me to create ValidationErrorI18nBehavior.
 
