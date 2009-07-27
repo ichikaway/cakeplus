@@ -44,14 +44,6 @@
  */
 class ValidationErrorI18nBehavior extends ModelBehavior {
 
-	function setup(&$model, $config = array()){
-
-		if( !empty( $config['withFieldName'] ) ){
-			$this->_withFieldName = true;
-		}
-	}
-
-
 
 	/**
 	 * Concatenate a field name with each validation error message in replaceValidationErrorMessagesI18n().
@@ -72,6 +64,23 @@ class ValidationErrorI18nBehavior extends ModelBehavior {
 	 * @access protected
 	 */
 	var $_error_messages = array();
+
+
+	/**
+	 * Setup
+	 *
+	 * @param Object $model
+	 * @param  $config
+	 *    Param: withFieldName (boolean)
+	 */
+	function setup(&$model, $config = array()){
+
+		if( !empty( $config['withFieldName'] ) ){
+			$this->_withFieldName = true;
+		}
+
+
+	}
 
 
 	/**
@@ -99,6 +108,7 @@ class ValidationErrorI18nBehavior extends ModelBehavior {
 	 * To change default validation error messages,
 	 *  set $add_error_message in each model.
 	 *
+	 * @param Object $model
 	 * @param array $add_error_message
 	 * @param boolean $all_change_flag
 	 *    true: change all default validation error messages
@@ -106,8 +116,6 @@ class ValidationErrorI18nBehavior extends ModelBehavior {
 	 * @access public
 	 */
 	function setErrorMessageI18n( &$model, $add_error_message = null, $all_change_flag=false ) {
-
-		if( !empty($this->_error_messages) ){ return ; }
 
 		$default_error_messages = $this->_getDefaultErrorMessagesI18n();
 
@@ -117,11 +125,12 @@ class ValidationErrorI18nBehavior extends ModelBehavior {
 			}else{
 				$default_error_messages = array_merge( $default_error_messages, $add_error_message );
 			}
+
+			$this->_error_messages = $default_error_messages;
+
+		}elseif( empty($this->_error_messages)  ){
+			$this->_error_messages = $default_error_messages;
 		}
-
-		$this->_error_messages = $default_error_messages;
-
-
 	}
 
 	/**
