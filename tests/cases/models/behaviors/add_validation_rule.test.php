@@ -43,47 +43,47 @@ class ValidationRule extends AddValidationRuleTestModel
 	var $useDbConfig = "test";
 
 
-  	var $validate = array(
- 		'valuediff' => array(
- 			"rule1" => array('rule' => array('compare2fields', 'valuediff_conf'),
- 				'message' => '【メールアドレス】 と【メールアドレス(確認)】の内容が異なります'
- 			),
- 		),
- 		'password' => array(
- 			"rule1" => array('rule' => array('compare2fields', 'password_conf',true),
- 				'message' => 'パスワード と パスワード(確認)の内容が異なります'
- 			),
- 		),
+	var $validate = array(
+		'valuediff' => array(
+			"rule1" => array('rule' => array('compare2fields', 'valuediff_conf'),
+				'message' => '【メールアドレス】 と【メールアドレス(確認)】の内容が異なります'
+			),
+		),
+		'password' => array(
+			"rule1" => array('rule' => array('compare2fields', 'password_conf',true),
+				'message' => 'パスワード と パスワード(確認)の内容が異なります'
+			),
+		),
 
- 		'spaceonly' => array(
- 			"rule5" => array('rule' => array('space_only'),
- 				'message' => 'スペース以外も入力してください'
- 			),
- 		),
-  		'alphanumber' => array(
-  			"rule7" => array('rule' => array('alpha_number'),
- 				'message' => '英数字のみで入力してください'
- 			),
- 		),
- 		'maxlengthjp' => array(
+		'spaceonly' => array(
+			"rule5" => array('rule' => array('space_only'),
+				'message' => 'スペース以外も入力してください'
+			),
+		),
+		'alphanumber' => array(
+			"rule7" => array('rule' => array('alpha_number'),
+				'message' => '英数字のみで入力してください'
+			),
+		),
+		'maxlengthjp' => array(
 			"rule2" => array('rule' => array('maxLengthJP', 10),
- 				'message' => '10文字以内です'
- 			),
+				'message' => '10文字以内です'
+			),
 
- 		),
- 		'minlengthjp' => array(
+		),
+		'minlengthjp' => array(
 			"rule3" => array('rule' => array('minLengthJP', 2),
- 				'message' => '2文字以上です'
- 			),
+				'message' => '2文字以上です'
+			),
 
- 		),
- 		'katakanaonly' => array(
-  			"rule6" => array('rule' => array('katakana_only'),
- 				'message' => 'カタカナのみ入力してください'
- 			),
- 		),
+		),
+		'katakanaonly' => array(
+			"rule6" => array('rule' => array('katakana_only'),
+				'message' => 'カタカナのみ入力してください'
+			),
+		),
 
- 	);
+	);
 }
 
 
