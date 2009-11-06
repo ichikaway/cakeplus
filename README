@@ -10,7 +10,9 @@ We will provide functions as follow.
 #Behavior
  -AddValidationRule: Check number of Multi byte character.
                      Check difference between 2 fields.
+                     Check Japanese Hiragana only input.
                      Check Japanese Katakana only input.
+                     Check Japanese Zenkaku only input.
                      Check space and Multibyte space only input.
 
  -ValidationErrorI18n: set validation error messages with gettext __() 
