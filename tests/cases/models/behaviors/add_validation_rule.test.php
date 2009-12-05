@@ -198,7 +198,7 @@ class AddValidationRuleTestCase extends CakeTestCase
 		$this->assertFalse( array_key_exists("alphanumber" , $this->ValidationRule->validationErrors ) );
 		$this->assertFalse( array_key_exists("maxlengthjp" , $this->ValidationRule->validationErrors ) );
 		$this->assertFalse( array_key_exists("minlengthjp" , $this->ValidationRule->validationErrors ) );
-	    $this->assertFalse( array_key_exists("katakanaonly" , $this->ValidationRule->validationErrors ) );
+		$this->assertFalse( array_key_exists("katakanaonly" , $this->ValidationRule->validationErrors ) );
 		$this->assertFalse( array_key_exists("betweenJP" , $this->ValidationRule->validationErrors ) );
 		$this->assertFalse( array_key_exists("hiragana_only" , $this->ValidationRule->validationErrors ) );
 		$this->assertFalse( array_key_exists("zenkaku_only" , $this->ValidationRule->validationErrors ) );
