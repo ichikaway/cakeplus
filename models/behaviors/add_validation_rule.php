@@ -47,6 +47,15 @@
  *				"rule6" => array('rule' => array('katakana_only'),
  *					'message' => 'カタカナのみ入力してください'
  *				),
+ *				"rule7" => array('rule' => array('betweenJP', 5, 10),
+ *					'message' => '5文字以上、10文字以内です'
+ *				),
+ *				"rule8" => array('rule' => array('hiragana_only'),
+ *					'message' => 'ひらがなのみ入力してください'
+ *				),
+ *				"rule9" => array('rule' => array('zenkaku_only'),
+ *					'message' => '全角文字のみ入力してください'
+ *				),
  *			),
  *		);
  *
