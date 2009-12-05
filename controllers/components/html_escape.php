@@ -9,7 +9,7 @@
  * @copyright     Copyright 2009, Yasushi Ichikawa. (http://d.hatena.ne.jp/cakephper/)
  * @link          http://d.hatena.ne.jp/cakephper/
  * @package       cakeplus
- * @subpackage    cakeplus
+ * @subpackage    html_escape
  * @version       0.01
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  *
