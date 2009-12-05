@@ -30,36 +30,36 @@
  *
  * 各モデルファイル内のバリデーションの書き方は下記を参考に。
  * Example: validation definition in a model.
- * 		var $validate = array(
- * 			'test' => array(
+ *		var $validate = array(
+ *			'test' => array(
  *				"rule2" => array('rule' => array('maxLengthJP', 5),
- * 					'message' => '5文字以内です'
- * 				),
+ *					'message' => '5文字以内です'
+ *				),
  *				"rule3" => array('rule' => array('minLengthJP', 2),
- * 					'message' => '2文字以上です'
- * 				),
+ *					'message' => '2文字以上です'
+ *				),
  *				"rule4" => array('rule' => array('compare2fields', 'test_conf'),
- * 					'message' => '値が違います'
- * 				),
- * 				"rule5" => array('rule' => array('space_only'),
- * 					'message' => 'スペース以外も入力してください'
- * 				),
- *	 			"rule6" => array('rule' => array('katakana_only'),
+ *					'message' => '値が違います'
+ *				),
+ *				"rule5" => array('rule' => array('space_only'),
+ *					'message' => 'スペース以外も入力してください'
+ *				),
+ *				"rule6" => array('rule' => array('katakana_only'),
  *					'message' => 'カタカナのみ入力してください'
- *	 			),
- *	 		),
- *	 	);
+ *				),
+ *			),
+ *		);
  *
  * Authコンポーネントでパスワードフィールドがハッシュ化されている場合は、compare2fieldsの第3配列にtrueを指定する
  * Using Auth component, If you want compare password and password confirm field,
  * set "true" in 3rd parameter of compare2fields validation, password_conf field is encrypted.
- *	 	var $validate = array(
- * 			'password' => array(
+ *		var $validate = array(
+ *			'password' => array(
  *				"rule" => array('rule' => array('compare2fields', 'password_conf',true),
- * 					'message' => '値が違います'
- * 				),
- * 			),
- * 		);
+ *					'message' => '値が違います'
+ *				),
+ *			),
+ *		);
  *
  *
  */
@@ -80,8 +80,8 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * マルチバイト用バリデーション　文字数上限チェック
 	 * check max length with Multibyte character.
 	 *
-	 * @param array &$model  model object, automatically set
-	 * @param array $wordvalue  field value, automatically set
+	 * @param array &$model	 model object, automatically set
+	 * @param array $wordvalue	field value, automatically set
 	 * @param int $length max length number
 	 * @return boolean
 	 */
@@ -106,6 +106,26 @@ class AddValidationRuleBehavior extends ModelBehavior {
 
 
 	/**
+	 * マルチバイト用のbetweenバリデーション
+	 *
+	 *
+	 * @param array &$model
+	 * @param array $wordvalue
+	 * @param int $low
+	 * @param int $high
+	 * @return boolean
+	 */
+	function betweenJP(&$model, $wordvalue, $low, $high) {
+		$value = array_shift($wordvalue);
+		if ( mb_strlen($value) >= $low && mb_strlen($value) <= $high ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+
+	/**
 	 * フィールド値の比較
 	 * emailとemail_confフィールドを比較する場合などに利用
 	 * $compare_filedに比較したいフィールド名をセットする（必須）
@@ -116,9 +136,9 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * 比較するpassword_confフィールドの値をハッシュ化する
 	 * If set "true" in $auth, $compare_filed is encrypted with Security::hash.
 	 *
-	 * @param array &$model  model object, automatically set
-	 * @param array $wordvalue  field value, automatically set
-	 * @param string $compare_filed  set field name for comparison
+	 * @param array &$model	 model object, automatically set
+	 * @param array $wordvalue	field value, automatically set
+	 * @param string $compare_filed	 set field name for comparison
 	 * @param boolean $auth set true, $compare_filed is encrypted with Security::hash
 	 * @return boolean
 	 */
@@ -134,6 +154,22 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	}
 
 
+	/**
+	 * 全角ひらがな以外が含まれていればエラーとするバリデーションチェック
+	 * 全角ダッシュ「ー」のみ必要と考えられるので追加
+	 * Japanese HIRAGANA Validation
+	 * @param array &$model
+	 * @param array $wordvalue
+	 * @return boolean
+	 */
+	function hiragana_only( &$model, $wordvalue){
+
+		$value = array_shift($wordvalue);
+
+		return preg_match("/^[ぁ-んー]*$/u", $value);
+
+	}
+
 
 	/**
 	 * 全角カタカナ以外が含まれていればエラーとするバリデーションチェック
@@ -145,12 +181,25 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 */
 	function katakana_only( &$model, $wordvalue){
 
-	    $value = array_shift($wordvalue);
+		$value = array_shift($wordvalue);
 
-	    return preg_match("/^[ァ-ヶー゛゜]*$/u", $value);
+		return preg_match("/^[ァ-ヶー゛゜]*$/u", $value);
 
 	}
 
+
+	/**
+	 * マルチバイト文字以外が含まれていればエラーとするバリデーションチェック
+	 * Japanese ZENKAKU Validation
+	 *
+	 * @param array &$model
+	 * @param array $wordvalue
+	 * @return boolean
+	 */
+	function zenkaku_only( &$model, $wordvalue){
+		$value = array_shift($wordvalue);
+		return !preg_match("/(?:\xEF\xBD[\xA1-\xBF]|\xEF\xBE[\x80-\x9F])|[\x20-\x7E]/", $value);
+	}
 
 
 
@@ -164,14 +213,14 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 */
 	function space_only( &$model, $wordvalue){
 
-	    $value = array_shift($wordvalue);
+		$value = array_shift($wordvalue);
 
-	    if( mb_ereg_match("^(\s|　)+$", $value) ){
+		if( mb_ereg_match("^(\s|　)+$", $value) ){
 
-		    return false;
-	    }else{
-	        return true;
-	    }
+			return false;
+		}else{
+			return true;
+		}
 	}
 
 

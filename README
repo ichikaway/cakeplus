@@ -10,7 +10,9 @@ We will provide functions as follow.
 #Behavior
  -AddValidationRule: Check number of Multi byte character.
                      Check difference between 2 fields.
+                     Check Japanese Hiragana only input.
                      Check Japanese Katakana only input.
+                     Check Japanese Zenkaku only input.
                      Check space and Multibyte space only input.
 
  -ValidationErrorI18n: set validation error messages with gettext __() 
@@ -22,6 +24,6 @@ We will provide functions as follow.
 
 
 ===== Contributors ========================
-K1LoW : feature of hash value check with AuthComponent in add_validation_rule::checkCompare
+k1LoW : feature of hash value check with AuthComponent in add_validation_rule::checkCompare
         Help me to create ValidationErrorI18nBehavior.
 
