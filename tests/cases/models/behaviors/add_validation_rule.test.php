@@ -82,6 +82,24 @@ class ValidationRule extends AddValidationRuleTestModel
 				'message' => 'カタカナのみ入力してください'
 			),
 		),
+		'betweenJP' => array(
+			"rule7" => array('rule' => array('betweenJP', 5, 10),
+				'message' => '5文字以上10文字以内です'
+			),
+		),
+		'hiragana_only' => array(
+			"rule8" => array('rule' => array('hiragana_only'),
+				'message' => 'ひらがなのみ入力してください'
+			),
+		),
+		'zenkaku_only' => array(
+			"rule9" => array('rule' => array('zenkaku_only'),
+				'message' => '全角のみ入力してください'
+			),
+		),
+
+
+
 
 	);
 }
@@ -130,6 +148,9 @@ class AddValidationRuleTestCase extends CakeTestCase
 				'maxlengthjp'	=>	'あああああああああああ',
 				'minlengthjp'	=>	'あ',
 				'katakanaonly'	=>	'あ',
+				'betweenJP'	=>	'あいうえおかきくけこさしすせそ',
+				'hiragana_only'	=>	'カタカナ',
+				'zenkaku_only'	=>	'090abc',
 
 			),
 		);
@@ -144,6 +165,9 @@ class AddValidationRuleTestCase extends CakeTestCase
 		$this->assertTrue( array_key_exists("maxlengthjp" , $this->ValidationRule->validationErrors ) );
 		$this->assertTrue( array_key_exists("minlengthjp" , $this->ValidationRule->validationErrors ) );
 		$this->assertTrue( array_key_exists("katakanaonly" , $this->ValidationRule->validationErrors ) );
+		$this->assertTrue( array_key_exists("betweenJP" , $this->ValidationRule->validationErrors ) );
+		$this->assertTrue( array_key_exists("hiragana_only" , $this->ValidationRule->validationErrors ) );
+		$this->assertTrue( array_key_exists("zenkaku_only" , $this->ValidationRule->validationErrors ) );
 
 	}
 
@@ -159,7 +183,9 @@ class AddValidationRuleTestCase extends CakeTestCase
 				'maxlengthjp'	=>	'10ああああああああ',
 				'minlengthjp'	=>	'あa',
 				'katakanaonly'	=>	'カタカナノミァィゥェォー゛゜',
-
+				'betweenJP'	=>	'あいうえおかきくけこ',
+				'hiragana_only'	=>	'ひらがな',
+				'zenkaku_only'	=>	'全角のみです',
 			),
 		);
 
@@ -172,7 +198,11 @@ class AddValidationRuleTestCase extends CakeTestCase
 		$this->assertFalse( array_key_exists("alphanumber" , $this->ValidationRule->validationErrors ) );
 		$this->assertFalse( array_key_exists("maxlengthjp" , $this->ValidationRule->validationErrors ) );
 		$this->assertFalse( array_key_exists("minlengthjp" , $this->ValidationRule->validationErrors ) );
-		$this->assertFalse( array_key_exists("katakanaonly" , $this->ValidationRule->validationErrors ) );
+	    $this->assertFalse( array_key_exists("katakanaonly" , $this->ValidationRule->validationErrors ) );
+		$this->assertFalse( array_key_exists("betweenJP" , $this->ValidationRule->validationErrors ) );
+		$this->assertFalse( array_key_exists("hiragana_only" , $this->ValidationRule->validationErrors ) );
+		$this->assertFalse( array_key_exists("zenkaku_only" , $this->ValidationRule->validationErrors ) );
+
 	}
 
 	//spaceonly, alphanum, katakanaonlyフィールドのみバリデーションに引っかかるテスト
@@ -243,6 +273,87 @@ class AddValidationRuleTestCase extends CakeTestCase
 		$this->assertTrue( array_key_exists("password" , $this->ValidationRule->validationErrors ) );
 	}
 
+	//betweenJP テスト
+	function testValidataionBetweenJP(){
+
+        $setFailData = array('ああ','abあい', 'aabbccddええおお' );
+        $setSuccessData = array('abcde', 'aabbccddええ', '1122334');
+
+        $field = 'betweenJP';
+
+        //失敗パターン
+        $data = array();
+        foreach($setFailData as $key => $value){
+           $data['ValidationRule'][$field] = $value;
+		    $this->assertTrue( $this->ValidationRule->create( $data ) );
+		    $this->assertFalse( $this->ValidationRule->validates() );
+		    $this->assertTrue( array_key_exists($field , $this->ValidationRule->validationErrors ) );
+        }
+
+        //成功パターン
+        $data = array();
+        foreach($setSuccessData as $key => $value){
+           $data['ValidationRule'][$field] = $value;
+		    $this->assertTrue( $this->ValidationRule->create( $data ) );
+		    $this->assertTrue( $this->ValidationRule->validates() );
+		    $this->assertFalse( array_key_exists($field , $this->ValidationRule->validationErrors ) );
+        }
+	}
+
+	//hiragana_only テスト
+	function testValidataionHiraganaOnly(){
+
+        $setFailData = array('あカナ','abあい', '0011ええおお','漢字も' );
+        $setSuccessData = array('がぎぁ', 'たーいへーいよー', 'にゃぴょにょ');
+
+        $field = 'hiragana_only';
+
+        //失敗パターン
+        $data = array();
+        foreach($setFailData as $key => $value){
+           $data['ValidationRule'][$field] = $value;
+		    $this->assertTrue( $this->ValidationRule->create( $data ) );
+		    $this->assertFalse( $this->ValidationRule->validates() );
+		    $this->assertTrue( array_key_exists($field , $this->ValidationRule->validationErrors ) );
+        }
+
+        //成功パターン
+        $data = array();
+        foreach($setSuccessData as $key => $value){
+           $data['ValidationRule'][$field] = $value;
+		    $this->assertTrue( $this->ValidationRule->create( $data ) );
+		    $this->assertTrue( $this->ValidationRule->validates() );
+		    $this->assertFalse( array_key_exists($field , $this->ValidationRule->validationErrors ) );
+        }
+	}
+
+
+	//zenkaku_only テスト
+	function testValidataionZenkakuOnly(){
+
+        $setFailData = array('*カナ','abあい', '0011ええおお','漢字も!' );
+        $setSuccessData = array('漢字も', 'カタカナも', '今日はグッド！！');
+
+        $field = 'zenkaku_only';
+
+        //失敗パターン
+        $data = array();
+        foreach($setFailData as $key => $value){
+           $data['ValidationRule'][$field] = $value;
+		    $this->assertTrue( $this->ValidationRule->create( $data ) );
+		    $this->assertFalse( $this->ValidationRule->validates() );
+		    $this->assertTrue( array_key_exists($field , $this->ValidationRule->validationErrors ) );
+        }
+
+        //成功パターン
+        $data = array();
+        foreach($setSuccessData as $key => $value){
+           $data['ValidationRule'][$field] = $value;
+		    $this->assertTrue( $this->ValidationRule->create( $data ) );
+		    $this->assertTrue( $this->ValidationRule->validates() );
+		    $this->assertFalse( array_key_exists($field , $this->ValidationRule->validationErrors ) );
+        }
+	}
 
 
 
