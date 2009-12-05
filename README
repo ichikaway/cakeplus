@@ -25,5 +25,6 @@ We will provide functions as follow.
 
 ===== Contributors ========================
 k1LoW : feature of hash value check with AuthComponent in add_validation_rule::checkCompare
+	adding validation rules(betweenJP, hiragana_only, zenkaku_only)
         Help me to create ValidationErrorI18nBehavior.
 
