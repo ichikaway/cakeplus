@@ -247,6 +247,29 @@ class AddValidationRuleBehavior extends ModelBehavior {
 
 	}
 
+    /**
+     * Japan Telephone and Fax validation
+     *
+     */
+    function tel_fax_jp(&$model, $wordvalue) {
+        $value = array_shift($wordvalue);
+        $pattern = '/^(0\d{1,4}[\s-]?\d{1,4}[\s-]?\d{1,4}|\+\d{1,3}[\s-]?\d{1,4}[\s-]?\d{1,4}[\s-]?\d{1,4})$/';
+        return preg_match( $pattern, $value );
+    }
+
+
+    /**
+     * Mobile Email validation
+     *
+     */
+    function mobile_email_jp(&$model, $wordvalue) {
+        $value = array_shift($wordvalue);
+        $pattern = '/^[a-z0-9\._-]{3,30}@(?:[a-z0-9][-a-z0-9]*\.)*(?:[a-z0-9][-a-z0-9]{0,62})\.(?:(?:[a-z]{2}\.)?[a-z]{2,4})$/i';
+        return preg_match( $pattern, $value );
+
+    }
+
+
 }
 
 ?>

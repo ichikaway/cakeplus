@@ -97,8 +97,16 @@ class ValidationRule extends AddValidationRuleTestModel
 				'message' => '全角のみ入力してください'
 			),
 		),
-
-
+		'tel_fax_jp' => array(
+			"rule10" => array('rule' => array('tel_fax_jp'),
+				'message' => '正しい電話番号を入力してください'
+			),
+		),
+		'mobile_email_jp' => array(
+			"rule11" => array('rule' => array('mobile_email_jp'),
+				'message' => '正しい携帯メールアドレスを入力して下さい'
+			),
+		),
 
 
 	);
@@ -151,6 +159,8 @@ class AddValidationRuleTestCase extends CakeTestCase
 				'betweenJP'	=>	'あいうえおかきくけこさしすせそ',
 				'hiragana_only'	=>	'カタカナ',
 				'zenkaku_only'	=>	'090abc',
+				'tel_fax_jp'	=>	'abcde',
+				'mobile_email_jp'	=>	'aaaaaaa',
 
 			),
 		);
@@ -168,6 +178,8 @@ class AddValidationRuleTestCase extends CakeTestCase
 		$this->assertTrue( array_key_exists("betweenJP" , $this->ValidationRule->validationErrors ) );
 		$this->assertTrue( array_key_exists("hiragana_only" , $this->ValidationRule->validationErrors ) );
 		$this->assertTrue( array_key_exists("zenkaku_only" , $this->ValidationRule->validationErrors ) );
+		$this->assertTrue( array_key_exists("tel_fax_jp" , $this->ValidationRule->validationErrors ) );
+		$this->assertTrue( array_key_exists("mobile_email_jp" , $this->ValidationRule->validationErrors ) );
 
 	}
 
@@ -186,6 +198,8 @@ class AddValidationRuleTestCase extends CakeTestCase
 				'betweenJP'	=>	'あいうえおかきくけこ',
 				'hiragana_only'	=>	'ひらがな',
 				'zenkaku_only'	=>	'全角のみです',
+				'tel_fax_jp'	=>	'03-1111-2222',
+				'mobile_email_jp'	=>	'hoge..aa@softbank.ne.jp',
 			),
 		);
 
@@ -202,6 +216,8 @@ class AddValidationRuleTestCase extends CakeTestCase
 		$this->assertFalse( array_key_exists("betweenJP" , $this->ValidationRule->validationErrors ) );
 		$this->assertFalse( array_key_exists("hiragana_only" , $this->ValidationRule->validationErrors ) );
 		$this->assertFalse( array_key_exists("zenkaku_only" , $this->ValidationRule->validationErrors ) );
+		$this->assertFalse( array_key_exists("tel_fax_jp" , $this->ValidationRule->validationErrors ) );
+		$this->assertFalse( array_key_exists("mobile_email_jp" , $this->ValidationRule->validationErrors ) );
 
 	}
 
@@ -356,6 +372,53 @@ class AddValidationRuleTestCase extends CakeTestCase
 	}
 
 
+	//tel_fax_jp テスト
+	function testValidataionTelFaxJp(){
+
+        $setFailData = array('03-111111-22222', 'aaa-cc-111', 'あああ-222' );
+        $setSuccessData = array('03-1111-2222', '0565-23-2222', '011-222-1111');
+
+        $field = 'tel_fax_jp';
+
+		$this->_failSuccessTest($setFailData, $setSuccessData, $field);
+	}
+
+
+	//mobile_email_jp テスト
+	function testValidataionMobileEmailJp(){
+
+        $setFailData = array('hoge', 'aa@aaaa', 'aa#!"@aa.com' );
+        $setSuccessData = array('hoge@docomo.ne.jp', 'hoge..aa@ezweb.ne.jp', 'a_._.e@softbank.ne.jp');
+
+        $field = 'mobile_email_jp';
+
+		$this->_failSuccessTest($setFailData, $setSuccessData, $field);
+
+	}
+
+
+	function _failSuccessTest($setFailData = array(),$setSuccessData = array(),$field ) {
+
+        //失敗パターン
+        $data = array();
+        foreach($setFailData as $key => $value){
+           $data['ValidationRule'][$field] = $value;
+		    $this->assertTrue( $this->ValidationRule->create( $data ) );
+		    $this->assertFalse( $this->ValidationRule->validates() );
+		    $this->assertTrue( array_key_exists($field , $this->ValidationRule->validationErrors ) );
+        }
+
+        //成功パターン
+        $data = array();
+        foreach($setSuccessData as $key => $value){
+           $data['ValidationRule'][$field] = $value;
+		    $this->assertTrue( $this->ValidationRule->create( $data ) );
+		    $this->assertTrue( $this->ValidationRule->validates() );
+		    $this->assertFalse( array_key_exists($field , $this->ValidationRule->validationErrors ) );
+        }
+
+
+	}
 
 }
 
