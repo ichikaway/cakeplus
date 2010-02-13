@@ -297,23 +297,8 @@ class AddValidationRuleTestCase extends CakeTestCase
 
         $field = 'betweenJP';
 
-        //失敗パターン
-        $data = array();
-        foreach($setFailData as $key => $value){
-           $data['ValidationRule'][$field] = $value;
-		    $this->assertTrue( $this->ValidationRule->create( $data ) );
-		    $this->assertFalse( $this->ValidationRule->validates() );
-		    $this->assertTrue( array_key_exists($field , $this->ValidationRule->validationErrors ) );
-        }
-
-        //成功パターン
-        $data = array();
-        foreach($setSuccessData as $key => $value){
-           $data['ValidationRule'][$field] = $value;
-		    $this->assertTrue( $this->ValidationRule->create( $data ) );
-		    $this->assertTrue( $this->ValidationRule->validates() );
-		    $this->assertFalse( array_key_exists($field , $this->ValidationRule->validationErrors ) );
-        }
+		$this->_failSuccessTest($setFailData, $setSuccessData, $field);
+	
 	}
 
 	//hiragana_only テスト
@@ -324,23 +309,7 @@ class AddValidationRuleTestCase extends CakeTestCase
 
         $field = 'hiragana_only';
 
-        //失敗パターン
-        $data = array();
-        foreach($setFailData as $key => $value){
-           $data['ValidationRule'][$field] = $value;
-		    $this->assertTrue( $this->ValidationRule->create( $data ) );
-		    $this->assertFalse( $this->ValidationRule->validates() );
-		    $this->assertTrue( array_key_exists($field , $this->ValidationRule->validationErrors ) );
-        }
-
-        //成功パターン
-        $data = array();
-        foreach($setSuccessData as $key => $value){
-           $data['ValidationRule'][$field] = $value;
-		    $this->assertTrue( $this->ValidationRule->create( $data ) );
-		    $this->assertTrue( $this->ValidationRule->validates() );
-		    $this->assertFalse( array_key_exists($field , $this->ValidationRule->validationErrors ) );
-        }
+		$this->_failSuccessTest($setFailData, $setSuccessData, $field);
 	}
 
 
@@ -352,23 +321,7 @@ class AddValidationRuleTestCase extends CakeTestCase
 
         $field = 'zenkaku_only';
 
-        //失敗パターン
-        $data = array();
-        foreach($setFailData as $key => $value){
-           $data['ValidationRule'][$field] = $value;
-		    $this->assertTrue( $this->ValidationRule->create( $data ) );
-		    $this->assertFalse( $this->ValidationRule->validates() );
-		    $this->assertTrue( array_key_exists($field , $this->ValidationRule->validationErrors ) );
-        }
-
-        //成功パターン
-        $data = array();
-        foreach($setSuccessData as $key => $value){
-           $data['ValidationRule'][$field] = $value;
-		    $this->assertTrue( $this->ValidationRule->create( $data ) );
-		    $this->assertTrue( $this->ValidationRule->validates() );
-		    $this->assertFalse( array_key_exists($field , $this->ValidationRule->validationErrors ) );
-        }
+		$this->_failSuccessTest($setFailData, $setSuccessData, $field);
 	}
 
 
