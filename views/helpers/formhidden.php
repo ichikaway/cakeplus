@@ -51,7 +51,9 @@ class FormhiddenHelper extends Helper {
 
         $this->_createHidden( $data_arr );
 
-        return $this->hidden_output;
+        $output = $this->hidden_output;
+        $this->hidden_output = null;
+        return $output;
     }
 
 
