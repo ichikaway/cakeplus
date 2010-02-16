@@ -107,6 +107,12 @@ class ValidationRule extends AddValidationRuleTestModel
 						'message' => '正しい携帯メールアドレスを入力して下さい'
 						),
 					),
+			'password_valid' => array(
+					"rule11" => array('rule' => array('password_valid','password_conf', 5, 10),
+						'message' => '正しいパスワードを入力して下さい'
+						),
+					),
+
 
 
 			);
@@ -161,6 +167,8 @@ class AddValidationRuleTestCase extends CakeTestCase
 					'zenkaku_only'	=>	'090abc',
 					'tel_fax_jp'	=>	'abcde',
 					'mobile_email_jp'	=>	'aaaaaaa',
+					'password_valid'	=>	'aa',
+					'password_conf'	=>	'aa',
 
 					),
 				);
@@ -180,6 +188,7 @@ class AddValidationRuleTestCase extends CakeTestCase
 		$this->assertTrue( array_key_exists("zenkaku_only" , $this->ValidationRule->validationErrors ) );
 		$this->assertTrue( array_key_exists("tel_fax_jp" , $this->ValidationRule->validationErrors ) );
 		$this->assertTrue( array_key_exists("mobile_email_jp" , $this->ValidationRule->validationErrors ) );
+		$this->assertTrue( array_key_exists("password_valid" , $this->ValidationRule->validationErrors ) );
 
 	}
 
@@ -200,6 +209,8 @@ class AddValidationRuleTestCase extends CakeTestCase
 					'zenkaku_only'	=>	'全角のみです',
 					'tel_fax_jp'	=>	'03-1111-2222',
 					'mobile_email_jp'	=>	'hoge..aa@softbank.ne.jp',
+					'password_valid'	=>	'hoge1245',
+					'password_conf'	=>	'hoge1245',
 					),
 				);
 
@@ -218,6 +229,7 @@ class AddValidationRuleTestCase extends CakeTestCase
 		$this->assertFalse( array_key_exists("zenkaku_only" , $this->ValidationRule->validationErrors ) );
 		$this->assertFalse( array_key_exists("tel_fax_jp" , $this->ValidationRule->validationErrors ) );
 		$this->assertFalse( array_key_exists("mobile_email_jp" , $this->ValidationRule->validationErrors ) );
+		$this->assertFalse( array_key_exists("password_valid" , $this->ValidationRule->validationErrors ) );
 
 	}
 
@@ -346,6 +358,39 @@ class AddValidationRuleTestCase extends CakeTestCase
 		$field = 'mobile_email_jp';
 
 		$this->_failSuccessTest($setFailData, $setSuccessData, $field);
+
+	}
+
+
+	//password_valid テスト
+	function testValidataionPasswordValid(){
+
+		$setFailData = array('hoge', 'aa@aaaa', 'aa#!"@aa.com','あああああ','123456789aa' );
+		$setSuccessData = array('hogeaaaa', '12345567', 'aaa13', '123456789a');
+
+		$field = 'password_valid';
+		$field_conf = 'password_conf';
+
+		//失敗パターン
+		$data = array();
+		foreach($setFailData as $key => $value){
+			$data['ValidationRule'][$field] = $value;
+			$data['ValidationRule'][$field_conf] = $value;
+			$this->assertTrue( $this->ValidationRule->create( $data ) );
+			$this->assertFalse( $this->ValidationRule->validates() );
+			$this->assertTrue( array_key_exists($field , $this->ValidationRule->validationErrors ) );
+		}
+
+		//成功パターン
+		$data = array();
+		foreach($setSuccessData as $key => $value){
+			$data['ValidationRule'][$field] = $value;
+			$data['ValidationRule'][$field_conf] = $value;
+			$this->assertTrue( $this->ValidationRule->create( $data ) );
+			$this->assertTrue( $this->ValidationRule->validates() );
+			$this->assertFalse( array_key_exists($field , $this->ValidationRule->validationErrors ) );
+		}
+
 
 	}
 

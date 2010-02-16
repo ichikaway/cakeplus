@@ -270,6 +270,18 @@ class AddValidationRuleBehavior extends ModelBehavior {
     }
 
 
+    /**
+     * password validation
+     * Only AlphaNumeric , check letter length
+     */
+    function password_valid( &$model, $wordvalue , $compare_filed , $min=5, $max=15 ){
+        $pass_val = $model->data[$model->alias][ $compare_filed ];
+        $pattern = '/^[a-zA-Z0-9]{'. $min .','. $max  .'}$/';
+        return preg_match($pattern, $pass_val);
+
+    }
+
+
 }
 
 ?>
