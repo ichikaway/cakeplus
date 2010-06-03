@@ -42,7 +42,7 @@
    * In AppModel, write code as follow.
    *
    *  class AppModel extends Model {
-   *      var $actsAs = array('Cakeplus.ValidationErrorI18n');
+   *      var $actsAs = array('Cakeplus.ValidationPatterns');
    *
    *      function beforeValidate(){
    *          $this->setValidationPatterns();
