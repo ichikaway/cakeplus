@@ -17,6 +17,7 @@ We will provide functions as follow.
 
  -ValidationErrorI18n: set validation error messages with gettext __() 
 
+ -ValidationPatterns: Summarize multiple validation pattern for writing validation define easily.
 
 #Helper
  -FormScreen: Auto create hidden tag
@@ -28,3 +29,5 @@ k1LoW : feature of hash value check with AuthComponent in add_validation_rule::c
         Help me to create ValidationErrorI18nBehavior.
 
 Kagasawa-san : adding validation rules(betweenJP, hiragana_only, zenkaku_only)
+               Author of the ValidationPatterns behavior.
+
