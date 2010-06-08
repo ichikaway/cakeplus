@@ -10,12 +10,12 @@
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2009, Yasushi Ichikawa. (http://d.hatena.ne.jp/cakephper/)
- * @link          http://d.hatena.ne.jp/cakephper/
- * @package       cakeplus
- * @subpackage    add_validation_rule
- * @version       0.04
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @copyright	  Copyright 2009, Yasushi Ichikawa. (http://d.hatena.ne.jp/cakephper/)
+ * @link		  http://d.hatena.ne.jp/cakephper/
+ * @package		  cakeplus
+ * @subpackage	  add_validation_rule
+ * @version		  0.04
+ * @license		  MIT License (http://www.opensource.org/licenses/mit-license.php)
  *
  *
  * =====利用方法=====
@@ -247,39 +247,39 @@ class AddValidationRuleBehavior extends ModelBehavior {
 
 	}
 
-    /**
-     * Japan Telephone and Fax validation
-     *
-     */
-    function tel_fax_jp(&$model, $wordvalue) {
-        $value = array_shift($wordvalue);
-        $pattern = '/^(0\d{1,4}[\s-]?\d{1,4}[\s-]?\d{1,4}|\+\d{1,3}[\s-]?\d{1,4}[\s-]?\d{1,4}[\s-]?\d{1,4})$/';
-        return preg_match( $pattern, $value );
-    }
+	/**
+	 * Japan Telephone and Fax validation
+	 *
+	 */
+	function tel_fax_jp(&$model, $wordvalue) {
+		$value = array_shift($wordvalue);
+		$pattern = '/^(0\d{1,4}[\s-]?\d{1,4}[\s-]?\d{1,4}|\+\d{1,3}[\s-]?\d{1,4}[\s-]?\d{1,4}[\s-]?\d{1,4})$/';
+		return preg_match( $pattern, $value );
+	}
 
 
-    /**
-     * Mobile Email validation
-     *
-     */
-    function mobile_email_jp(&$model, $wordvalue) {
-        $value = array_shift($wordvalue);
-        $pattern = '/^[a-z0-9\._-]{3,30}@(?:[a-z0-9][-a-z0-9]*\.)*(?:[a-z0-9][-a-z0-9]{0,62})\.(?:(?:[a-z]{2}\.)?[a-z]{2,4})$/i';
-        return preg_match( $pattern, $value );
+	/**
+	 * Mobile Email validation
+	 *
+	 */
+	function mobile_email_jp(&$model, $wordvalue) {
+		$value = array_shift($wordvalue);
+		$pattern = '/^[a-z0-9\._-]{3,30}@(?:[a-z0-9][-a-z0-9]*\.)*(?:[a-z0-9][-a-z0-9]{0,62})\.(?:(?:[a-z]{2}\.)?[a-z]{2,4})$/i';
+		return preg_match( $pattern, $value );
 
-    }
+	}
 
 
-    /**
-     * password validation
-     * Only AlphaNumeric , check letter length
-     */
-    function password_valid( &$model, $wordvalue , $compare_filed , $min=5, $max=15 ){
-        $pass_val = $model->data[$model->alias][ $compare_filed ];
-        $pattern = '/^[a-zA-Z0-9]{'. $min .','. $max  .'}$/';
-        return preg_match($pattern, $pass_val);
+	/**
+	 * password validation
+	 * Only AlphaNumeric , check letter length
+	 */
+	function password_valid( &$model, $wordvalue , $compare_filed , $min=5, $max=15 ){
+		$pass_val = $model->data[$model->alias][ $compare_filed ];
+		$pattern = '/^[a-zA-Z0-9]{'. $min .','. $max  .'}$/';
+		return preg_match($pattern, $pass_val);
 
-    }
+	}
 
 
 }

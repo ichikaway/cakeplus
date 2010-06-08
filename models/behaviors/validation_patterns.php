@@ -66,16 +66,15 @@ class ValidationPatternsBehavior extends ModelBehavior {
 
     public function setup(&$model, $config = array()) {
         $this->settings[$model->alias] = $config;
-        $this->model[$model->alias] = $model;
     }
 
     public function setValidationPatterns(&$model) {
 
-        if ( !empty($this->model[$model->alias]->validate) ) {
-            foreach ($this->model[$model->alias]->validate as $key => $val) {
+        if ( !empty($model->validate) ) {
+            foreach ($model->validate as $key => $val) {
                 if ( !is_array($val) ) {
                     if ( isset($model->validation_patterns[$val]) ) {
-                        $this->model[$model->alias]->validate[$key] = $model->validation_patterns[$val];
+                        $model->validate[$key] = $model->validation_patterns[$val];
                     }
                 } else {
                     $valids = array();
@@ -89,7 +88,7 @@ class ValidationPatternsBehavior extends ModelBehavior {
                         }
                     }
 
-                    $this->model[$model->alias]->validate[$key] = $valids;
+                    $model->validate[$key] = $valids;
                 }
             }
         }
