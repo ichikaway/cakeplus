@@ -151,14 +151,15 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * @param boolean $auth set true, $compare_filed is encrypted with Security::hash
 	 * @return boolean
 	 */
-	function compare2fields( &$model, $wordvalue , $compare_filed , $auth = false ){
+	function compare2fields( &$model, $wordvalue , $compare_field , $auth = false ){
 
-		$fieldname = key($wordvalue);
+		$field = current($wordvalue);
+		$compare = isset($model->data[$model->alias][$compare_field]) ? $model->data[$model->alias][$compare_field] : null;
 		if( $auth === true ){
 			App::import('Component','Auth');
-			return ( $model->data[$model->alias][$fieldname] === AuthComponent::password($model->data[$model->alias][ $compare_filed ]) );
-		}else{
-			return ( $model->data[$model->alias][$fieldname] === $model->data[$model->alias][ $compare_filed ] );
+			return $field === AuthComponent::password($compare);
+		} else {
+			return $field === $compare;
 		}
 	}
 
