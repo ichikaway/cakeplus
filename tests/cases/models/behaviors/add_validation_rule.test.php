@@ -418,6 +418,25 @@ class AddValidationRuleTestCase extends CakeTestCase
 
 	}
 
+
+	//比較対象のフィールドが存在しない場合でもエラーが出ないか確認テスト
+	function testValidataionCompare2fieldWithEmptyField(){
+
+		$data = array(
+				'ValidationRule' => array(
+					'valuediff'	=>	'あいうえお',
+					),
+				);
+
+		$this->assertTrue( $this->ValidationRule->create( $data ) );
+		$this->assertFalse( $this->ValidationRule->validates() );
+
+		$this->assertTrue( array_key_exists("valuediff" , $this->ValidationRule->validationErrors ) );
+
+	}
+
+
+
 }
 
 ?>
