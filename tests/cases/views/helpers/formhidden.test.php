@@ -42,20 +42,16 @@ class FormhiddenHelperTest extends CakeTestCase {
 	}
 
 	function startCase() {
-		echo '<h2>Starting Test Case</h2>';
 
 	}
 
 	function endCase() {
-		echo '<h2>Ending Test Case</h2>';
 	}
 
 	function startTest($method) {
-		echo '<h3>Starting method '.$method.'</h3>';
 	}
 
 	function endTest($method) {
-		echo '<hr/>';
 	}
 
 
