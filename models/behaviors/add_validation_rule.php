@@ -283,6 +283,39 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	}
 
 
+	/**
+	 * Datetime validation, determines if the string passed is a valid datetime.
+	 * Using self date and time validation methods.
+	 *
+	 * @param string $check a valid datetime string
+	 * @param mixed $format Use a string or an array of the keys below. Arrays should be passed as array('dmy', 'mdy', etc)
+	 * @param string $regex If a custom regular expression is used this is the only validation that will occur.
+	 * @return boolean Success
+	 * @access public
+	 */
+	function datetime(&$model, $wordvalue, $format = 'ymd', $regex = null) {
+		$_this =& Validation::getInstance();
+		$_this->__reset();
+
+		$value = array_shift($wordvalue);
+
+		$pattern = '%^(.+) (\d+:\d+[APap][Mm])$|^(.+) (\d+:\d+)$%';
+		preg_match($pattern, $value, $match);
+		if(!empty($match[1]) && !empty($match[2])) {
+			$date = $match[1];
+			$time = $match[2];
+		} else if(!empty($match[3]) && !empty($match[4])) {
+			$date = $match[3];
+			$time = $match[4];
+		}
+
+		if(empty($date) || empty($time)){
+			return false;
+		}
+
+		return $_this->date($date, $format, $regex) && $_this->time($time);
+	}
+
 }
 
 ?>

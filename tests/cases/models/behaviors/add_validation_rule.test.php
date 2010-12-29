@@ -108,10 +108,16 @@ class ValidationRule extends AddValidationRuleTestModel
 						),
 					),
 			'password_valid' => array(
-					"rule11" => array('rule' => array('password_valid','password_conf', 5, 10),
+					"rule12" => array('rule' => array('password_valid','password_conf', 5, 10),
 						'message' => '正しいパスワードを入力して下さい'
 						),
 					),
+			'datetime_valid' => array(
+					"rule13" => array('rule' => array('datetime', 'ymd', null),
+						'message' => '正しい日付を入力して下さい'
+						),
+					),
+
 
 
 
@@ -432,6 +438,24 @@ class AddValidationRuleTestCase extends CakeTestCase
 		$this->assertFalse( $this->ValidationRule->validates() );
 
 		$this->assertTrue( array_key_exists("valuediff" , $this->ValidationRule->validationErrors ) );
+
+	}
+
+
+	/**
+	 * testDatetimeYyyymmdd method
+	 *
+	 * @access public
+	 * @return void
+	 */
+	function testDatetimeYyyymmdd() {
+
+		$setSuccessData = array('2006-12-27 12:22', '2006.12.27 12:22AM', '2006/12/27 12:22PM', '2006 12 27 12:22' );
+		$setFailData = array('2006-11-31 12:22', '2006.11.31 12:22', '2006/11/31 12:22', '2006 11 31 12:22', '');
+
+		$field = 'datetime_valid';
+
+		$this->_failSuccessTest($setFailData, $setSuccessData, $field);
 
 	}
 
