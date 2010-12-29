@@ -151,6 +151,35 @@ class AddValidationRuleTestCase extends CakeTestCase
 	function endTest($method) {
 	}
 
+	/**
+	 * 複数のテストをまとめて実行するメソッド
+	 * 失敗ケースの値と、成功ケースの値をそれぞれ配列でセットする
+	 */
+	function _failSuccessTest($setFailData = array(),$setSuccessData = array(),$field ) {
+
+		//失敗パターン
+		$data = array();
+		foreach($setFailData as $key => $value){
+			$data['ValidationRule'][$field] = $value;
+			$this->assertTrue( $this->ValidationRule->create( $data ) );
+			$this->assertFalse( $this->ValidationRule->validates() );
+			$this->assertTrue( array_key_exists($field , $this->ValidationRule->validationErrors ) );
+		}
+
+		//成功パターン
+		$data = array();
+		foreach($setSuccessData as $key => $value){
+			$data['ValidationRule'][$field] = $value;
+			$this->assertTrue( $this->ValidationRule->create( $data ) );
+			$this->assertTrue( $this->ValidationRule->validates() );
+			$this->assertFalse( array_key_exists($field , $this->ValidationRule->validationErrors ) );
+		}
+
+
+	}
+
+
+
 
 	//全てバリデーションに引っかかるテスト
 	function testValidataionAllFail(){
@@ -388,30 +417,6 @@ class AddValidationRuleTestCase extends CakeTestCase
 		foreach($setSuccessData as $key => $value){
 			$data['ValidationRule'][$field] = $value;
 			$data['ValidationRule'][$field_conf] = $value;
-			$this->assertTrue( $this->ValidationRule->create( $data ) );
-			$this->assertTrue( $this->ValidationRule->validates() );
-			$this->assertFalse( array_key_exists($field , $this->ValidationRule->validationErrors ) );
-		}
-
-
-	}
-
-
-	function _failSuccessTest($setFailData = array(),$setSuccessData = array(),$field ) {
-
-		//失敗パターン
-		$data = array();
-		foreach($setFailData as $key => $value){
-			$data['ValidationRule'][$field] = $value;
-			$this->assertTrue( $this->ValidationRule->create( $data ) );
-			$this->assertFalse( $this->ValidationRule->validates() );
-			$this->assertTrue( array_key_exists($field , $this->ValidationRule->validationErrors ) );
-		}
-
-		//成功パターン
-		$data = array();
-		foreach($setSuccessData as $key => $value){
-			$data['ValidationRule'][$field] = $value;
 			$this->assertTrue( $this->ValidationRule->create( $data ) );
 			$this->assertTrue( $this->ValidationRule->validates() );
 			$this->assertFalse( array_key_exists($field , $this->ValidationRule->validationErrors ) );
