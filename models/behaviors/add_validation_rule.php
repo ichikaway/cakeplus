@@ -177,7 +177,7 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 */
 	function hiraganaOnly( &$model, $wordvalue){
 		$value = array_shift($wordvalue);
-		return preg_match("/^[ぁ-んー]*$/u", $value);
+		return preg_match("/^(\xe3(\x81[\x81-\xbf]|\x82[\x80-\x93]|\x83\xbc))*$/", $value);
 	}
 
 	/**
@@ -199,8 +199,10 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 */
 	function katakanaOnly( &$model, $wordvalue){
 		$value = array_shift($wordvalue);
-		return preg_match("/^[ァ-ヶー゛゜]*$/u", $value);
 
+		//\xe3\x82\x9b 濁点゛
+		//\xe3\x82\x9c 半濁点゜
+		return preg_match("/^(\xe3(\x82[\xa1-\xbf]|\x83[\x80-\xb6]|\x83\xbc|\x82\x9b|\x82\x9c))*$/", $value);
 	}
 
 	/**
