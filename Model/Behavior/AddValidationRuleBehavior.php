@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 独自のバリデーションルールを追加するbehavior プラグイン
  * 内部文字コードはデフォルトUTF-8（オプションで変更可能）
@@ -364,8 +363,7 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * @access public
 	 */
 	function datetime(&$model, $wordvalue, $format = 'ymd', $regex = null) {
-		$_this =& Validation::getInstance();
-		$_this->__reset();
+		$_this = new Validation;
 
 		$value = array_shift($wordvalue);
 
@@ -387,5 +385,3 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	}
 
 }
-
-?>

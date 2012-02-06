@@ -10,28 +10,9 @@ App::import('Component', 'Auth');
  * @package app.tests
  * @subpackage app.tests.cases.behaviors
  */
-class AddValidationRuleTestModel extends CakeTestModel
+class ValidationRule extends CakeTestModel
 {
-	/**
-	 * Behaviors for this model
-	 *
-	 * @var array
-	 * @access public
-	 */
-	var $actsAs = array('cakeplus.AddValidationRule');
 
-
-}
-
-
-/**
- * Model used in test case.
- *
- * @package	app.tests
- * @subpackage app.tests.cases.behaviors
- */
-class ValidationRule extends AddValidationRuleTestModel
-{
 	/**
 	 * Name for this model
 	 *
@@ -39,9 +20,13 @@ class ValidationRule extends AddValidationRuleTestModel
 	 * @access public
 	 */
 	var $name = 'ValidationRule';
-	var $useTable = false;
-	var $useDbConfig = "test";
-
+	/**
+	 * Behaviors for this model
+	 *
+	 * @var array
+	 * @access public
+	 */
+	var $actsAs = array('Cakeplus.AddValidationRule');
 
 	var $validate = array(
 			'valuediff' => array(
@@ -117,15 +102,9 @@ class ValidationRule extends AddValidationRuleTestModel
 						'message' => '正しい日付を入力して下さい'
 						),
 					),
-
-
-
-
 			);
+
 }
-
-
-
 
 
 class AddValidationRuleTestCase extends CakeTestCase
@@ -135,14 +114,10 @@ class AddValidationRuleTestCase extends CakeTestCase
 	 */
 	var $ValidationRule = null;
 
-	var $fixtures = null;
+	public $fixtures = array('plugin.cakeplus.validation_rule');
 
-
-	function startCase() {
-		$this->ValidationRule =& ClassRegistry::init('ValidationRule');
-	}
-
-	function endCase() {
+	function setUp() {
+		$this->ValidationRule = ClassRegistry::init('ValidationRule');
 	}
 
 	function startTest($method) {
@@ -161,7 +136,7 @@ class AddValidationRuleTestCase extends CakeTestCase
 		$data = array();
 		foreach($setFailData as $key => $value){
 			$data['ValidationRule'][$field] = $value;
-			$this->assertTrue( $this->ValidationRule->create( $data ) );
+			$this->assertIdentical( $this->ValidationRule->create( $data ) , $data);
 			$this->assertFalse( $this->ValidationRule->validates() );
 			$this->assertTrue( array_key_exists($field , $this->ValidationRule->validationErrors ) );
 		}
@@ -170,7 +145,7 @@ class AddValidationRuleTestCase extends CakeTestCase
 		$data = array();
 		foreach($setSuccessData as $key => $value){
 			$data['ValidationRule'][$field] = $value;
-			$this->assertTrue( $this->ValidationRule->create( $data ) );
+			$this->assertIdentical( $this->ValidationRule->create( $data ) , $data);
 			$this->assertTrue( $this->ValidationRule->validates() );
 			$this->assertFalse( array_key_exists($field , $this->ValidationRule->validationErrors ) );
 		}
@@ -204,7 +179,7 @@ class AddValidationRuleTestCase extends CakeTestCase
 					),
 				);
 
-		$this->assertTrue( $this->ValidationRule->create( $data ) );
+		$this->assertIdentical( $this->ValidationRule->create( $data ) , $data);
 
 		$this->assertFalse( $this->ValidationRule->validates() );
 
@@ -245,7 +220,7 @@ class AddValidationRuleTestCase extends CakeTestCase
 					),
 				);
 
-		$this->assertTrue( $this->ValidationRule->create( $data ) );
+		$this->assertIdentical( $this->ValidationRule->create( $data ) , $data);
 		$this->assertTrue( $this->ValidationRule->validates() );
 
 
@@ -280,8 +255,7 @@ class AddValidationRuleTestCase extends CakeTestCase
 					),
 				);
 
-
-		$this->assertTrue( $this->ValidationRule->create( $data ) );
+		$this->assertIdentical( $this->ValidationRule->create( $data ) , $data);
 		$this->assertFalse( $this->ValidationRule->validates() );
 
 
@@ -303,7 +277,7 @@ class AddValidationRuleTestCase extends CakeTestCase
 					'password_conf'	=>	'abc123',
 					),
 				);
-		$this->assertTrue( $this->ValidationRule->create( $data ) );
+		$this->assertIdentical( $this->ValidationRule->create( $data ) , $data);
 		$this->assertFalse( $this->ValidationRule->validates() );
 		$this->assertTrue( array_key_exists("password" , $this->ValidationRule->validationErrors ) );
 
@@ -315,7 +289,7 @@ class AddValidationRuleTestCase extends CakeTestCase
 					'password_conf'	=>	'abc123cvb',
 					),
 				);
-		$this->assertTrue( $this->ValidationRule->create( $data ) );
+		$this->assertIdentical( $this->ValidationRule->create( $data ) , $data);
 		$this->assertTrue( $this->ValidationRule->validates() );
 		$this->assertFalse( array_key_exists("password" , $this->ValidationRule->validationErrors ) );
 
@@ -327,7 +301,7 @@ class AddValidationRuleTestCase extends CakeTestCase
 					'password_conf'	=>	'hoge111',
 					),
 				);
-		$this->assertTrue( $this->ValidationRule->create( $data ) );
+		$this->assertIdentical( $this->ValidationRule->create( $data ) , $data);
 		$this->assertFalse( $this->ValidationRule->validates() );
 		$this->assertTrue( array_key_exists("password" , $this->ValidationRule->validationErrors ) );
 	}
@@ -407,7 +381,7 @@ class AddValidationRuleTestCase extends CakeTestCase
 		foreach($setFailData as $key => $value){
 			$data['ValidationRule'][$field] = $value;
 			$data['ValidationRule'][$field_conf] = $value;
-			$this->assertTrue( $this->ValidationRule->create( $data ) );
+			$this->assertIdentical( $this->ValidationRule->create( $data ) , $data);
 			$this->assertFalse( $this->ValidationRule->validates() );
 			$this->assertTrue( array_key_exists($field , $this->ValidationRule->validationErrors ) );
 		}
@@ -417,7 +391,7 @@ class AddValidationRuleTestCase extends CakeTestCase
 		foreach($setSuccessData as $key => $value){
 			$data['ValidationRule'][$field] = $value;
 			$data['ValidationRule'][$field_conf] = $value;
-			$this->assertTrue( $this->ValidationRule->create( $data ) );
+			$this->assertIdentical( $this->ValidationRule->create( $data ) , $data);
 			$this->assertTrue( $this->ValidationRule->validates() );
 			$this->assertFalse( array_key_exists($field , $this->ValidationRule->validationErrors ) );
 		}
@@ -435,7 +409,7 @@ class AddValidationRuleTestCase extends CakeTestCase
 					),
 				);
 
-		$this->assertTrue( $this->ValidationRule->create( $data ) );
+		$this->assertIdentical( $this->ValidationRule->create( $data ) , $data);
 		$this->assertFalse( $this->ValidationRule->validates() );
 
 		$this->assertTrue( array_key_exists("valuediff" , $this->ValidationRule->validationErrors ) );
@@ -461,7 +435,4 @@ class AddValidationRuleTestCase extends CakeTestCase
 	}
 
 
-
 }
-
-?>
