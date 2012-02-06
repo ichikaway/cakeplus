@@ -56,12 +56,12 @@ class ValidationRule extends AddValidationRuleTestModel
 				),
 
 			'spaceonly' => array(
-				"rule5" => array('rule' => array('space_only'),
+				"rule5" => array('rule' => array('spaceOnly'),
 					'message' => 'スペース以外も入力してください'
 					),
 				),
 			'alphanumber' => array(
-				"rule7" => array('rule' => array('alpha_number'),
+				"rule7" => array('rule' => array('alphaNumber'),
 					'message' => '英数字のみで入力してください'
 					),
 				),
@@ -78,7 +78,7 @@ class ValidationRule extends AddValidationRuleTestModel
 
 					),
 			'katakanaonly' => array(
-					"rule6" => array('rule' => array('katakana_only'),
+					"rule6" => array('rule' => array('katakanaOnly'),
 						'message' => 'カタカナのみ入力してください'
 						),
 					),
@@ -87,31 +87,37 @@ class ValidationRule extends AddValidationRuleTestModel
 						'message' => '5文字以上10文字以内です'
 						),
 					),
-			'hiragana_only' => array(
-					"rule8" => array('rule' => array('hiragana_only'),
+			'hiraganaOnly' => array(
+					"rule8" => array('rule' => array('hiraganaOnly'),
 						'message' => 'ひらがなのみ入力してください'
 						),
 					),
-			'zenkaku_only' => array(
-					"rule9" => array('rule' => array('zenkaku_only'),
+			'zenkakuOnly' => array(
+					"rule9" => array('rule' => array('zenkakuOnly'),
 						'message' => '全角のみ入力してください'
 						),
 					),
-			'tel_fax_jp' => array(
-					"rule10" => array('rule' => array('tel_fax_jp'),
+			'telFaxJp' => array(
+					"rule10" => array('rule' => array('telFaxJp'),
 						'message' => '正しい電話番号を入力してください'
 						),
 					),
-			'mobile_email_jp' => array(
-					"rule11" => array('rule' => array('mobile_email_jp'),
+			'mobileEmailJp' => array(
+					"rule11" => array('rule' => array('mobileEmailJp'),
 						'message' => '正しい携帯メールアドレスを入力して下さい'
 						),
 					),
-			'password_valid' => array(
-					"rule11" => array('rule' => array('password_valid','password_conf', 5, 10),
+			'passwordValid' => array(
+					"rule12" => array('rule' => array('passwordValid','password_conf', 5, 10),
 						'message' => '正しいパスワードを入力して下さい'
 						),
 					),
+			'datetime_valid' => array(
+					"rule13" => array('rule' => array('datetime', 'ymd', null),
+						'message' => '正しい日付を入力して下さい'
+						),
+					),
+
 
 
 
@@ -133,21 +139,46 @@ class AddValidationRuleTestCase extends CakeTestCase
 
 
 	function startCase() {
-		echo '<h2>Starting Test Case</h2>';
 		$this->ValidationRule =& ClassRegistry::init('ValidationRule');
 	}
 
 	function endCase() {
-		echo '<h2>Ending Test Case</h2>';
 	}
 
 	function startTest($method) {
-		echo '<h3>Starting method '.$method.'</h3>';
 	}
 
 	function endTest($method) {
-		echo '<hr/>';
 	}
+
+	/**
+	 * 複数のテストをまとめて実行するメソッド
+	 * 失敗ケースの値と、成功ケースの値をそれぞれ配列でセットする
+	 */
+	function _failSuccessTest($setFailData = array(),$setSuccessData = array(),$field ) {
+
+		//失敗パターン
+		$data = array();
+		foreach($setFailData as $key => $value){
+			$data['ValidationRule'][$field] = $value;
+			$this->assertTrue( $this->ValidationRule->create( $data ) );
+			$this->assertFalse( $this->ValidationRule->validates() );
+			$this->assertTrue( array_key_exists($field , $this->ValidationRule->validationErrors ) );
+		}
+
+		//成功パターン
+		$data = array();
+		foreach($setSuccessData as $key => $value){
+			$data['ValidationRule'][$field] = $value;
+			$this->assertTrue( $this->ValidationRule->create( $data ) );
+			$this->assertTrue( $this->ValidationRule->validates() );
+			$this->assertFalse( array_key_exists($field , $this->ValidationRule->validationErrors ) );
+		}
+
+
+	}
+
+
 
 
 	//全てバリデーションに引っかかるテスト
@@ -163,11 +194,11 @@ class AddValidationRuleTestCase extends CakeTestCase
 					'minlengthjp'	=>	'あ',
 					'katakanaonly'	=>	'あ',
 					'betweenJP'	=>	'あいうえおかきくけこさしすせそ',
-					'hiragana_only'	=>	'カタカナ',
-					'zenkaku_only'	=>	'090abc',
-					'tel_fax_jp'	=>	'abcde',
-					'mobile_email_jp'	=>	'aaaaaaa',
-					'password_valid'	=>	'aa',
+					'hiraganaOnly'	=>	'カタカナ',
+					'zenkakuOnly'	=>	'090abc',
+					'telFaxJp'	=>	'abcde',
+					'mobileEmailJp'	=>	'aaaaaaa',
+					'passwordValid'	=>	'aa',
 					'password_conf'	=>	'aa',
 
 					),
@@ -184,11 +215,11 @@ class AddValidationRuleTestCase extends CakeTestCase
 		$this->assertTrue( array_key_exists("minlengthjp" , $this->ValidationRule->validationErrors ) );
 		$this->assertTrue( array_key_exists("katakanaonly" , $this->ValidationRule->validationErrors ) );
 		$this->assertTrue( array_key_exists("betweenJP" , $this->ValidationRule->validationErrors ) );
-		$this->assertTrue( array_key_exists("hiragana_only" , $this->ValidationRule->validationErrors ) );
-		$this->assertTrue( array_key_exists("zenkaku_only" , $this->ValidationRule->validationErrors ) );
-		$this->assertTrue( array_key_exists("tel_fax_jp" , $this->ValidationRule->validationErrors ) );
-		$this->assertTrue( array_key_exists("mobile_email_jp" , $this->ValidationRule->validationErrors ) );
-		$this->assertTrue( array_key_exists("password_valid" , $this->ValidationRule->validationErrors ) );
+		$this->assertTrue( array_key_exists("hiraganaOnly" , $this->ValidationRule->validationErrors ) );
+		$this->assertTrue( array_key_exists("zenkakuOnly" , $this->ValidationRule->validationErrors ) );
+		$this->assertTrue( array_key_exists("telFaxJp" , $this->ValidationRule->validationErrors ) );
+		$this->assertTrue( array_key_exists("mobileEmailJp" , $this->ValidationRule->validationErrors ) );
+		$this->assertTrue( array_key_exists("passwordValid" , $this->ValidationRule->validationErrors ) );
 
 	}
 
@@ -205,11 +236,11 @@ class AddValidationRuleTestCase extends CakeTestCase
 					'minlengthjp'	=>	'あa',
 					'katakanaonly'	=>	'カタカナノミァィゥェォー゛゜',
 					'betweenJP'	=>	'あいうえおかきくけこ',
-					'hiragana_only'	=>	'ひらがな',
-					'zenkaku_only'	=>	'全角のみです',
-					'tel_fax_jp'	=>	'03-1111-2222',
-					'mobile_email_jp'	=>	'hoge..aa@softbank.ne.jp',
-					'password_valid'	=>	'hoge1245',
+					'hiraganaOnly'	=>	'ひらがな',
+					'zenkakuOnly'	=>	'全角のみです',
+					'telFaxJp'	=>	'03-1111-2222',
+					'mobileEmailJp'	=>	'hoge..aa@softbank.ne.jp',
+					'passwordValid'	=>	'hoge1245',
 					'password_conf'	=>	'hoge1245',
 					),
 				);
@@ -225,11 +256,11 @@ class AddValidationRuleTestCase extends CakeTestCase
 		$this->assertFalse( array_key_exists("minlengthjp" , $this->ValidationRule->validationErrors ) );
 		$this->assertFalse( array_key_exists("katakanaonly" , $this->ValidationRule->validationErrors ) );
 		$this->assertFalse( array_key_exists("betweenJP" , $this->ValidationRule->validationErrors ) );
-		$this->assertFalse( array_key_exists("hiragana_only" , $this->ValidationRule->validationErrors ) );
-		$this->assertFalse( array_key_exists("zenkaku_only" , $this->ValidationRule->validationErrors ) );
-		$this->assertFalse( array_key_exists("tel_fax_jp" , $this->ValidationRule->validationErrors ) );
-		$this->assertFalse( array_key_exists("mobile_email_jp" , $this->ValidationRule->validationErrors ) );
-		$this->assertFalse( array_key_exists("password_valid" , $this->ValidationRule->validationErrors ) );
+		$this->assertFalse( array_key_exists("hiraganaOnly" , $this->ValidationRule->validationErrors ) );
+		$this->assertFalse( array_key_exists("zenkakuOnly" , $this->ValidationRule->validationErrors ) );
+		$this->assertFalse( array_key_exists("telFaxJp" , $this->ValidationRule->validationErrors ) );
+		$this->assertFalse( array_key_exists("mobileEmailJp" , $this->ValidationRule->validationErrors ) );
+		$this->assertFalse( array_key_exists("passwordValid" , $this->ValidationRule->validationErrors ) );
 
 	}
 
@@ -313,62 +344,62 @@ class AddValidationRuleTestCase extends CakeTestCase
 
 	}
 
-	//hiragana_only テスト
+	//hiraganaOnly テスト
 	function testValidataionHiraganaOnly(){
 
 		$setFailData = array('あカナ','abあい', '0011ええおお','漢字も' );
 		$setSuccessData = array('がぎぁ', 'たーいへーいよー', 'にゃぴょにょ');
 
-		$field = 'hiragana_only';
+		$field = 'hiraganaOnly';
 
 		$this->_failSuccessTest($setFailData, $setSuccessData, $field);
 	}
 
 
-	//zenkaku_only テスト
+	//zenkakuOnly テスト
 	function testValidataionZenkakuOnly(){
 
 		$setFailData = array('*カナ','abあい', '0011ええおお','漢字も!' );
 		$setSuccessData = array('漢字も', 'カタカナも', '今日はグッド！！');
 
-		$field = 'zenkaku_only';
+		$field = 'zenkakuOnly';
 
 		$this->_failSuccessTest($setFailData, $setSuccessData, $field);
 	}
 
 
-	//tel_fax_jp テスト
+	//telFaxJp テスト
 	function testValidataionTelFaxJp(){
 
 		$setFailData = array('03-111111-22222', 'aaa-cc-111', 'あああ-222' );
 		$setSuccessData = array('03-1111-2222', '0565-23-2222', '011-222-1111');
 
-		$field = 'tel_fax_jp';
+		$field = 'telFaxJp';
 
 		$this->_failSuccessTest($setFailData, $setSuccessData, $field);
 	}
 
 
-	//mobile_email_jp テスト
+	//mobileEmailJp テスト
 	function testValidataionMobileEmailJp(){
 
 		$setFailData = array('hoge', 'aa@aaaa', 'aa#!"@aa.com' );
 		$setSuccessData = array('hoge@docomo.ne.jp', 'hoge..aa@ezweb.ne.jp', 'a_._.e@softbank.ne.jp');
 
-		$field = 'mobile_email_jp';
+		$field = 'mobileEmailJp';
 
 		$this->_failSuccessTest($setFailData, $setSuccessData, $field);
 
 	}
 
 
-	//password_valid テスト
+	//passwordValid テスト
 	function testValidataionPasswordValid(){
 
 		$setFailData = array('hoge', 'aa@aaaa', 'aa#!"@aa.com','あああああ','123456789aa' );
 		$setSuccessData = array('hogeaaaa', '12345567', 'aaa13', '123456789a');
 
-		$field = 'password_valid';
+		$field = 'passwordValid';
 		$field_conf = 'password_conf';
 
 		//失敗パターン
@@ -395,28 +426,41 @@ class AddValidationRuleTestCase extends CakeTestCase
 	}
 
 
-	function _failSuccessTest($setFailData = array(),$setSuccessData = array(),$field ) {
+	//比較対象のフィールドが存在しない場合でもエラーが出ないか確認テスト
+	function testValidataionCompare2fieldWithEmptyField(){
 
-		//失敗パターン
-		$data = array();
-		foreach($setFailData as $key => $value){
-			$data['ValidationRule'][$field] = $value;
-			$this->assertTrue( $this->ValidationRule->create( $data ) );
-			$this->assertFalse( $this->ValidationRule->validates() );
-			$this->assertTrue( array_key_exists($field , $this->ValidationRule->validationErrors ) );
-		}
+		$data = array(
+				'ValidationRule' => array(
+					'valuediff'	=>	'あいうえお',
+					),
+				);
 
-		//成功パターン
-		$data = array();
-		foreach($setSuccessData as $key => $value){
-			$data['ValidationRule'][$field] = $value;
-			$this->assertTrue( $this->ValidationRule->create( $data ) );
-			$this->assertTrue( $this->ValidationRule->validates() );
-			$this->assertFalse( array_key_exists($field , $this->ValidationRule->validationErrors ) );
-		}
+		$this->assertTrue( $this->ValidationRule->create( $data ) );
+		$this->assertFalse( $this->ValidationRule->validates() );
 
+		$this->assertTrue( array_key_exists("valuediff" , $this->ValidationRule->validationErrors ) );
 
 	}
+
+
+	/**
+	 * testDatetimeYyyymmdd method
+	 *
+	 * @access public
+	 * @return void
+	 */
+	function testDatetimeYyyymmdd() {
+
+		$setSuccessData = array('2006-12-27 12:22', '2006.12.27 12:22AM', '2006/12/27 12:22PM', '2006 12 27 12:22' );
+		$setFailData = array('2006-11-31 12:22', '2006.11.31 12:22', '2006/11/31 12:22', '2006 11 31 12:22', '');
+
+		$field = 'datetime_valid';
+
+		$this->_failSuccessTest($setFailData, $setSuccessData, $field);
+
+	}
+
+
 
 }
 

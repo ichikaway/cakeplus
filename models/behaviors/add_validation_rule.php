@@ -41,20 +41,23 @@
  *				"rule4" => array('rule' => array('compare2fields', 'test_conf'),
  *					'message' => '値が違います'
  *				),
- *				"rule5" => array('rule' => array('space_only'),
+ *				"rule5" => array('rule' => array('spaceOnly'),
  *					'message' => 'スペース以外も入力してください'
  *				),
- *				"rule6" => array('rule' => array('katakana_only'),
+ *				"rule6" => array('rule' => array('katakanaOnly'),
  *					'message' => 'カタカナのみ入力してください'
  *				),
  *				"rule7" => array('rule' => array('betweenJP', 5, 10),
  *					'message' => '5文字以上、10文字以内です'
  *				),
- *				"rule8" => array('rule' => array('hiragana_only'),
+ *				"rule8" => array('rule' => array('hiraganaOnly'),
  *					'message' => 'ひらがなのみ入力してください'
  *				),
- *				"rule9" => array('rule' => array('zenkaku_only'),
+ *				"rule9" => array('rule' => array('zenkakuOnly'),
  *					'message' => '全角文字のみ入力してください'
+ *				),
+ *				"rule10" => array('rule' => array('datetime'),
+ *					'message' => '正しい日時を入力してください'
  *				),
  *			),
  *		);
@@ -151,14 +154,15 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * @param boolean $auth set true, $compare_filed is encrypted with Security::hash
 	 * @return boolean
 	 */
-	function compare2fields( &$model, $wordvalue , $compare_filed , $auth = false ){
+	function compare2fields( &$model, $wordvalue , $compare_field , $auth = false ){
 
-		$fieldname = key($wordvalue);
+		$field = current($wordvalue);
+		$compare = isset($model->data[$model->alias][$compare_field]) ? $model->data[$model->alias][$compare_field] : null;
 		if( $auth === true ){
 			App::import('Component','Auth');
-			return ( $model->data[$model->alias][$fieldname] === AuthComponent::password($model->data[$model->alias][ $compare_filed ]) );
-		}else{
-			return ( $model->data[$model->alias][$fieldname] === $model->data[$model->alias][ $compare_filed ] );
+			return $field === AuthComponent::password($compare);
+		} else {
+			return $field === $compare;
 		}
 	}
 
@@ -171,14 +175,19 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * @param array $wordvalue
 	 * @return boolean
 	 */
-	function hiragana_only( &$model, $wordvalue){
-
+	function hiraganaOnly( &$model, $wordvalue){
 		$value = array_shift($wordvalue);
-
-		return preg_match("/^[ぁ-んー]*$/u", $value);
-
+		return preg_match("/^(\xe3(\x81[\x81-\xbf]|\x82[\x80-\x93]|\x83\xbc))*$/", $value);
 	}
 
+	/**
+	 * 全角ひらがな以外が含まれていればエラーとするバリデーションチェック
+	 * Japanese HIRAGANA Validation
+	 * (old name, keep this for backward compatibility)
+	 */
+	function hiragana_only( &$model, $wordvalue){
+		return $this->hiraganaOnly($model, $wordvalue);
+	}
 
 	/**
 	 * 全角カタカナ以外が含まれていればエラーとするバリデーションチェック
@@ -188,12 +197,21 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * @param array $wordvalue
 	 * @return boolean
 	 */
-	function katakana_only( &$model, $wordvalue){
-
+	function katakanaOnly( &$model, $wordvalue){
 		$value = array_shift($wordvalue);
 
-		return preg_match("/^[ァ-ヶー゛゜]*$/u", $value);
+		//\xe3\x82\x9b 濁点゛
+		//\xe3\x82\x9c 半濁点゜
+		return preg_match("/^(\xe3(\x82[\xa1-\xbf]|\x83[\x80-\xb6]|\x83\xbc|\x82\x9b|\x82\x9c))*$/", $value);
+	}
 
+	/**
+	 * 全角カタカナ以外が含まれていればエラーとするバリデーションチェック
+	 * Japanese KATAKANA Validation
+	 * (old name, keep this for backward compatibility)
+	 */
+	function katakana_only( &$model, $wordvalue){
+		return $this->katakanaOnly($model, $wordvalue);
 	}
 
 
@@ -205,9 +223,18 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * @param array $wordvalue
 	 * @return boolean
 	 */
-	function zenkaku_only( &$model, $wordvalue){
+	function zenkakuOnly( &$model, $wordvalue){
 		$value = array_shift($wordvalue);
 		return !preg_match("/(?:\xEF\xBD[\xA1-\xBF]|\xEF\xBE[\x80-\x9F])|[\x20-\x7E]/", $value);
+	}
+
+	/**
+	 * マルチバイト文字以外が含まれていればエラーとするバリデーションチェック
+	 * Japanese ZENKAKU Validation
+	 * (old name, keep this for backward compatibility)
+	 */
+	function zenkaku_only( &$model, $wordvalue){
+		return $this->zenkakuOnly($model, $wordvalue);
 	}
 
 
@@ -220,16 +247,23 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * @param array $wordvalue
 	 * @return boolean
 	 */
-	function space_only( &$model, $wordvalue){
-
+	function spaceOnly( &$model, $wordvalue){
 		$value = array_shift($wordvalue);
-
 		if( mb_ereg_match("^(\s|　)+$", $value) ){
-
 			return false;
 		}else{
 			return true;
 		}
+	}
+
+	/**
+	 * 全角、半角スペースのみであればエラーとするバリデーションチェック
+	 * Japanese Space only validation
+	 * (old name, keep this for backward compatibility)
+	 *
+	 */
+	function space_only( &$model, $wordvalue){
+		return $this->spaceOnly($model, $wordvalue);
 	}
 
 
@@ -241,20 +275,41 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * @param array $wordvalue
 	 * @return boolean
 	 */
-	function alpha_number( &$model, $wordvalue ){
+	function alphaNumber( &$model, $wordvalue ){
 		$value = array_shift($wordvalue);
 		return preg_match( "/^[a-zA-Z0-9]*$/", $value );
 
 	}
 
 	/**
+	 * only Allow 0-9, a-z , A-Z
+	 * check it including Multibyte characters.
+	 * (old name, keep this for backward compatibility)
+	 *
+	 */
+	function alpha_number( &$model, $wordvalue ){
+		return $this->alphaNumber($model, $wordvalue);
+
+	}
+
+
+	/**
 	 * Japan Telephone and Fax validation
 	 *
 	 */
-	function tel_fax_jp(&$model, $wordvalue) {
+	function telFaxJp(&$model, $wordvalue) {
 		$value = array_shift($wordvalue);
 		$pattern = '/^(0\d{1,4}[\s-]?\d{1,4}[\s-]?\d{1,4}|\+\d{1,3}[\s-]?\d{1,4}[\s-]?\d{1,4}[\s-]?\d{1,4})$/';
 		return preg_match( $pattern, $value );
+	}
+
+	/**
+	 * Japan Telephone and Fax validation
+	 * (old name, keep this for backward compatibility)
+	 *
+	 */
+	function tel_fax_jp(&$model, $wordvalue) {
+		return $this->telFaxJp($model, $wordvalue);
 	}
 
 
@@ -262,11 +317,20 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * Mobile Email validation
 	 *
 	 */
-	function mobile_email_jp(&$model, $wordvalue) {
+	function mobileEmailJp(&$model, $wordvalue) {
 		$value = array_shift($wordvalue);
 		$pattern = '/^[a-z0-9\._-]{3,30}@(?:[a-z0-9][-a-z0-9]*\.)*(?:[a-z0-9][-a-z0-9]{0,62})\.(?:(?:[a-z]{2}\.)?[a-z]{2,4})$/i';
 		return preg_match( $pattern, $value );
 
+	}
+
+	/**
+	 * Mobile Email validation
+	 * (old name, keep this for backward compatibility)
+	 *
+	 */
+	function mobile_email_jp(&$model, $wordvalue) {
+		return $this->mobileEmailJp($model, $wordvalue);
 	}
 
 
@@ -274,13 +338,53 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * password validation
 	 * Only AlphaNumeric , check letter length
 	 */
-	function password_valid( &$model, $wordvalue , $compare_filed , $min=5, $max=15 ){
+	function passwordValid( &$model, $wordvalue , $compare_filed , $min=5, $max=15 ){
 		$pass_val = $model->data[$model->alias][ $compare_filed ];
 		$pattern = '/^[a-zA-Z0-9]{'. $min .','. $max  .'}$/';
 		return preg_match($pattern, $pass_val);
 
 	}
+	
+	/**
+	 * password validation
+	 * (old name, keep this for backward compatibility)
+	 */
+	function password_valid( &$model, $wordvalue , $compare_filed , $min=5, $max=15 ){
+		return $this->passwordValid($model, $wordvalue , $compare_filed , $min, $max);
+	}
 
+	/**
+	 * Datetime validation, determines if the string passed is a valid datetime.
+	 * Using self date and time validation methods.
+	 *
+	 * @param string $check a valid datetime string
+	 * @param mixed $format Use a string or an array of the keys below. Arrays should be passed as array('dmy', 'mdy', etc)
+	 * @param string $regex If a custom regular expression is used this is the only validation that will occur.
+	 * @return boolean Success
+	 * @access public
+	 */
+	function datetime(&$model, $wordvalue, $format = 'ymd', $regex = null) {
+		$_this =& Validation::getInstance();
+		$_this->__reset();
+
+		$value = array_shift($wordvalue);
+
+		$pattern = '%^(.+) (\d+:\d+[APap][Mm])$|^(.+) (\d+:\d+)$%';
+		preg_match($pattern, $value, $match);
+		if(!empty($match[1]) && !empty($match[2])) {
+			$date = $match[1];
+			$time = $match[2];
+		} else if(!empty($match[3]) && !empty($match[4])) {
+			$date = $match[3];
+			$time = $match[4];
+		}
+
+		if(empty($date) || empty($time)){
+			return false;
+		}
+
+		return $_this->date($date, $format, $regex) && $_this->time($time);
+	}
 
 }
 
