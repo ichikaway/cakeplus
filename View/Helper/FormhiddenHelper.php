@@ -42,11 +42,11 @@ class FormhiddenHelper extends Helper {
      * @return String
      */
     function hiddenVars( $data_arr = null ) {
+        $data = $this->request->data;
 
-        if( empty($this->data) && empty($data_arr) ){ return; }
-
+        if( empty($data) && empty($data_arr) ){ return; }
         if( !is_array($data_arr) || empty($data_arr) ){
-        	$data_arr = $this->data;
+            $data_arr = $data;
         }
 
         $this->_createHidden( $data_arr );
@@ -57,22 +57,20 @@ class FormhiddenHelper extends Helper {
     }
 
 
-	function _createHidden( $data, $parent_key = null ){
-		if( is_array( $data ) ){
+    function _createHidden( $data, $parent_key = null ){
+        if( is_array( $data ) ){
 
-			foreach( $data as $key => $val ){
-				$parent_key_arr = ( isset($parent_key) ) ? $parent_key . '.' . $key : $key ;
-				self::_createHidden( $val, $parent_key_arr );
-			}
+            foreach( $data as $key => $val ){
+                $parent_key_arr = ( isset($parent_key) ) ? $parent_key . '.' . $key : $key ;
+                self::_createHidden( $val, $parent_key_arr );
+            }
 
-		}else{
-			$this->hidden_output .= $this->Form->hidden( $parent_key )."\n";
+        }else{
+            $this->hidden_output .= $this->Form->hidden( $parent_key )."\n";
 
-		}
+        }
 
-	}
+    }
 
 
 }
-
-?>

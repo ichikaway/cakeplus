@@ -79,6 +79,9 @@ class ValidationPatternsBehavior extends ModelBehavior {
                 } else {
                     $valids = array();
                     foreach ($val as $key2 => $val2) {
+                        if ($key2 === 'rule') {
+                            continue 2;
+                        }
                         if ( !is_array($val2) ) {
                             if ( isset($model->validation_patterns[$val2]) ) {
                                 $valids = array_merge($valids, $model->validation_patterns[$val2]);

@@ -1,6 +1,6 @@
 <?php
 
-App::import('Core', array('ClassRegistry', 'Controller', 'View'));
+App::import('Controller', 'Controller');
 App::import('Helper', 'Html');
 App::import('Helper', 'Form');
 App::import('Helper', 'Cakeplus.Formhidden');
@@ -27,13 +27,13 @@ class ContactTestController extends Controller {
 class FormhiddenHelperTest extends CakeTestCase {
 
 	function setUp(){
-		$this->Formhidden =& new FormhiddenHelper();
-		$this->Formhidden->Form =& new FormHelper();
-		$this->Formhidden->Form->Html =& new HtmlHelper();
+		parent::setUp();
+		$this->Controller = new ContactTestController();
+		$this->View = new View($this->Controller);
 
-		$this->Controller =& new ContactTestController();
-		$this->View =& new View($this->Controller);
-
+		$this->Formhidden = new FormhiddenHelper($this->View);
+		$this->Formhidden->Form = new FormHelper($this->View);
+		$this->Formhidden->Form->Html = new HtmlHelper($this->View);
 	}
 
 	function tearDown() {
@@ -42,7 +42,6 @@ class FormhiddenHelperTest extends CakeTestCase {
 	}
 
 	function startCase() {
-
 	}
 
 	function endCase() {
@@ -99,9 +98,7 @@ class FormhiddenHelperTest extends CakeTestCase {
 
 		$this->Formhidden->data = $data;
 		$this->Formhidden->Form->data = $data;
-
 		$result = $this->Formhidden->hiddenVars();
-
 		$this->assertTags($result, $expected);
 	}
 
@@ -120,6 +117,3 @@ class FormhiddenHelperTest extends CakeTestCase {
 		$this->assertNull($result);
 	}
 }
-
-
-?>

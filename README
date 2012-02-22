@@ -1,4 +1,5 @@
 Cake plus is cakephp plugin and provides some functions for CakePHP.
+2.0 branch is for CakePHP2.x
 
 We will provide functions as follow.
 
@@ -27,6 +28,7 @@ We will provide functions as follow.
 ===== Contributors ========================
 k1LoW : feature of hash value check with AuthComponent in add_validation_rule::checkCompare
         Help me to create ValidationErrorI18nBehavior.
+        Made the patch for CakePHP2.0
 
 Kagasawa-san : adding validation rules(betweenJP, hiragana_only, zenkaku_only)
                Author of the ValidationPatterns behavior.
