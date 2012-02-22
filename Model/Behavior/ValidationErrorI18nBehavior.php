@@ -94,8 +94,8 @@ class ValidationErrorI18nBehavior extends ModelBehavior {
 		//Write Default Error Message
 		$default_error_messages = array(
 			'require' 	=> 'Please be sure to input.',
-			'email_invalid' => __('Invalid Email address.',true),
-			'between' => __('Between %2$d and %3$d characters.',true),
+			'email_invalid' => __('Invalid Email address.'),
+			'between' => __('Between %2$d and %3$d characters.'),
 		);
 
 		return $default_error_messages;
@@ -168,12 +168,12 @@ class ValidationErrorI18nBehavior extends ModelBehavior {
 					$model->validate[$fieldname][$rule]['message'] = vsprintf($error_message, $rule_option);
 
 				}elseif( !empty($model->validate[$fieldname][$rule]['message']) ){
-					$model->validate[$fieldname][$rule]['message'] = __( $model->validate[$fieldname][$rule]['message'], true);
+					$model->validate[$fieldname][$rule]['message'] = __( $model->validate[$fieldname][$rule]['message'] );
 				}
 
 
 				if( $this->_withFieldName && !empty($model->validate[$fieldname][$rule]['message']) ){
-					$model->validate[$fieldname][$rule]['message'] = __( $fieldname ,true) . ' : ' . $model->validate[$fieldname][$rule]['message'];
+					$model->validate[$fieldname][$rule]['message'] = __( $fieldname ) . ' : ' . $model->validate[$fieldname][$rule]['message'];
 				}
 			}
 		}
@@ -181,5 +181,3 @@ class ValidationErrorI18nBehavior extends ModelBehavior {
 
 
 }
-
-?>
