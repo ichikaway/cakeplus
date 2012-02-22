@@ -42,7 +42,7 @@ class FormhiddenHelper extends Helper {
      * @return String
      */
     function hiddenVars( $data_arr = null ) {
-        $data = $this->data;
+        $data = $this->request->data;
 
         if( empty($data) && empty($data_arr) ){ return; }
         if( !is_array($data_arr) || empty($data_arr) ){
