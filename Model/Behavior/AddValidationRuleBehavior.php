@@ -76,7 +76,7 @@
  */
 class AddValidationRuleBehavior extends ModelBehavior {
 
-	public function setUp(&$model, $config = array()){
+	public function setup(Model $model, $config = array()){
 
 		//change encoding with parameter option.
 		if( !empty( $config['encoding'] ) ){
@@ -96,7 +96,7 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * @param int $length max length number
 	 * @return boolean
 	 */
-	public function maxLengthJP( &$model, $wordvalue, $length ) {
+	public function maxLengthJP(Model $model, $wordvalue, $length ) {
 		$word = array_shift($wordvalue);
 		return( mb_strlen( $word ) <= $length );
 	}
@@ -110,7 +110,7 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * @param int $length min length number
 	 * @return boolean
 	 */
-	public function minLengthJP( &$model, $wordvalue, $length ) {
+	public function minLengthJP(Model $model, $wordvalue, $length ) {
 		$word = array_shift($wordvalue);
 		return( mb_strlen( $word ) >= $length );
 	}
@@ -126,7 +126,7 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * @param int $high
 	 * @return boolean
 	 */
-	public function betweenJP(&$model, $wordvalue, $low, $high) {
+	public function betweenJP(Model $model, $wordvalue, $low, $high) {
 		$value = array_shift($wordvalue);
 		if ( mb_strlen($value) >= $low && mb_strlen($value) <= $high ) {
 			return true;
@@ -153,7 +153,7 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * @param boolean $auth set true, $compare_filed is encrypted with Security::hash
 	 * @return boolean
 	 */
-	public function compare2fields( &$model, $wordvalue , $compare_field , $auth = false ){
+	public function compare2fields(Model $model, $wordvalue , $compare_field , $auth = false ){
 
 		$field = current($wordvalue);
 		$compare = isset($model->data[$model->alias][$compare_field]) ? $model->data[$model->alias][$compare_field] : null;
@@ -174,7 +174,7 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * @param array $wordvalue
 	 * @return boolean
 	 */
-	public function hiraganaOnly( &$model, $wordvalue){
+	public function hiraganaOnly(Model $model, $wordvalue){
 		$value = array_shift($wordvalue);
 		return preg_match("/^(\xe3(\x81[\x81-\xbf]|\x82[\x80-\x93]|\x83\xbc))*$/", $value);
 	}
@@ -184,7 +184,7 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * Japanese HIRAGANA Validation
 	 * (old name, keep this for backward compatibility)
 	 */
-	public function hiragana_only( &$model, $wordvalue){
+	public function hiragana_only(Model $model, $wordvalue){
 		return $this->hiraganaOnly($model, $wordvalue);
 	}
 
@@ -196,7 +196,7 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * @param array $wordvalue
 	 * @return boolean
 	 */
-	public function katakanaOnly( &$model, $wordvalue){
+	public function katakanaOnly(Model $model, $wordvalue){
 		$value = array_shift($wordvalue);
 
 		//\xe3\x82\x9b 濁点゛
@@ -209,7 +209,7 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * Japanese KATAKANA Validation
 	 * (old name, keep this for backward compatibility)
 	 */
-	public function katakana_only( &$model, $wordvalue){
+	public function katakana_only(Model $model, $wordvalue){
 		return $this->katakanaOnly($model, $wordvalue);
 	}
 
@@ -222,7 +222,7 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * @param array $wordvalue
 	 * @return boolean
 	 */
-	public function zenkakuOnly( &$model, $wordvalue){
+	public function zenkakuOnly(Model $model, $wordvalue){
 		$value = array_shift($wordvalue);
 		return !preg_match("/(?:\xEF\xBD[\xA1-\xBF]|\xEF\xBE[\x80-\x9F])|[\x20-\x7E]/", $value);
 	}
@@ -232,7 +232,7 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * Japanese ZENKAKU Validation
 	 * (old name, keep this for backward compatibility)
 	 */
-	public function zenkaku_only( &$model, $wordvalue){
+	public function zenkaku_only(Model $model, $wordvalue){
 		return $this->zenkakuOnly($model, $wordvalue);
 	}
 
@@ -246,7 +246,7 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * @param array $wordvalue
 	 * @return boolean
 	 */
-	public function spaceOnly( &$model, $wordvalue){
+	public function spaceOnly(Model $model, $wordvalue){
 		$value = array_shift($wordvalue);
 		if( mb_ereg_match("^(\s|　)+$", $value) ){
 			return false;
@@ -261,7 +261,7 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * (old name, keep this for backward compatibility)
 	 *
 	 */
-	public function space_only( &$model, $wordvalue){
+	public function space_only(Model $model, $wordvalue){
 		return $this->spaceOnly($model, $wordvalue);
 	}
 
@@ -274,7 +274,7 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * @param array $wordvalue
 	 * @return boolean
 	 */
-	public function alphaNumber( &$model, $wordvalue ){
+	public function alphaNumber(Model $model, $wordvalue ){
 		$value = array_shift($wordvalue);
 		return preg_match( "/^[a-zA-Z0-9]*$/", $value );
 	}
@@ -285,7 +285,7 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * (old name, keep this for backward compatibility)
 	 *
 	 */
-	public function alpha_number( &$model, $wordvalue ){
+	public function alpha_number(Model $model, $wordvalue ){
 		return $this->alphaNumber($model, $wordvalue);
 	}
 
@@ -294,7 +294,7 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * Japan Telephone and Fax validation
 	 *
 	 */
-	public function telFaxJp(&$model, $wordvalue) {
+	public function telFaxJp(Model $model, $wordvalue) {
 		$value = array_shift($wordvalue);
 		$pattern = '/^(0\d{1,4}[\s-]?\d{1,4}[\s-]?\d{1,4}|\+\d{1,3}[\s-]?\d{1,4}[\s-]?\d{1,4}[\s-]?\d{1,4})$/';
 		return preg_match( $pattern, $value );
@@ -305,7 +305,7 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * (old name, keep this for backward compatibility)
 	 *
 	 */
-	public function tel_fax_jp(&$model, $wordvalue) {
+	public function tel_fax_jp(Model $model, $wordvalue) {
 		return $this->telFaxJp($model, $wordvalue);
 	}
 
@@ -314,7 +314,7 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * Mobile Email validation
 	 *
 	 */
-	public function mobileEmailJp(&$model, $wordvalue) {
+	public function mobileEmailJp(Model $model, $wordvalue) {
 		$value = array_shift($wordvalue);
 		$pattern = '/^[a-z0-9\._-]{3,30}@(?:[a-z0-9][-a-z0-9]*\.)*(?:[a-z0-9][-a-z0-9]{0,62})\.(?:(?:[a-z]{2}\.)?[a-z]{2,4})$/i';
 		return preg_match( $pattern, $value );
@@ -325,7 +325,7 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * (old name, keep this for backward compatibility)
 	 *
 	 */
-	public function mobile_email_jp(&$model, $wordvalue) {
+	public function mobile_email_jp(Model $model, $wordvalue) {
 		return $this->mobileEmailJp($model, $wordvalue);
 	}
 
@@ -334,7 +334,7 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * password validation
 	 * Only AlphaNumeric , check letter length
 	 */
-	public function passwordValid( &$model, $wordvalue , $compare_filed , $min=5, $max=15 ){
+	public function passwordValid(Model $model, $wordvalue , $compare_filed , $min=5, $max=15 ){
 		$pass_val = $model->data[$model->alias][ $compare_filed ];
 		$pattern = '/^[a-zA-Z0-9]{'. $min .','. $max  .'}$/';
 		return preg_match($pattern, $pass_val);
@@ -345,7 +345,7 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * password validation
 	 * (old name, keep this for backward compatibility)
 	 */
-	public function password_valid( &$model, $wordvalue , $compare_filed , $min=5, $max=15 ){
+	public function password_valid(Model $model, $wordvalue , $compare_filed , $min=5, $max=15 ){
 		return $this->passwordValid($model, $wordvalue , $compare_filed , $min, $max);
 	}
 
@@ -359,7 +359,7 @@ class AddValidationRuleBehavior extends ModelBehavior {
 	 * @return boolean Success
 	 * @access public
 	 */
-	public function datetime(&$model, $wordvalue, $format = 'ymd', $regex = null) {
+	public function datetime(Model $model, $wordvalue, $format = 'ymd', $regex = null) {
 		$_this = new Validation;
 
 		$value = array_shift($wordvalue);
