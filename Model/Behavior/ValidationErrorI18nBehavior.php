@@ -73,7 +73,7 @@ class ValidationErrorI18nBehavior extends ModelBehavior {
 	 * @param  $config
 	 *    Param: withFieldName (boolean)
 	 */
-	function setup(&$model, $config = array()){
+	function setup(Model $model, $config = array()){
 
 		if( !empty( $config['withFieldName'] ) ){
 			$this->_withFieldName = true;
@@ -115,7 +115,7 @@ class ValidationErrorI18nBehavior extends ModelBehavior {
 	 *    false: merge $add_error_message with default validation error messages
 	 * @access public
 	 */
-	function setErrorMessageI18n( &$model, $add_error_message = null, $all_change_flag=false ) {
+	function setErrorMessageI18n(Model $model, $add_error_message = null, $all_change_flag=false) {
 
 		$default_error_messages = $this->_getDefaultErrorMessagesI18n();
 
@@ -149,7 +149,7 @@ class ValidationErrorI18nBehavior extends ModelBehavior {
 	 *
 	 * @access public
 	 */
-	function replaceValidationErrorMessagesI18n( &$model ){
+	function replaceValidationErrorMessagesI18n(Model $model){
 		$this->setErrorMessageI18n($model, null, false);
 
 		foreach( $model->validate as $fieldname => $ruleSet ){
