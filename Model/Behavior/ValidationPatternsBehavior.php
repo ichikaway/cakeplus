@@ -64,11 +64,11 @@ class ValidationPatternsBehavior extends ModelBehavior {
     private $model = array();
     public $settings = array();
 
-    public function setup(&$model, $config = array()) {
+    public function setup(Model $model, $config = array()) {
         $this->settings[$model->alias] = $config;
     }
 
-    public function setValidationPatterns(&$model) {
+    public function setValidationPatterns(Model $model) {
 
         if ( !empty($model->validate) ) {
             foreach ($model->validate as $key => $val) {
