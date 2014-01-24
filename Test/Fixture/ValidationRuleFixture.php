@@ -17,7 +17,7 @@ class ValidationRuleFixture extends CakeTestFixture {
                         'telFaxJp' => array('type' => 'text', 'null' => true, 'default' => NULL, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
                         'mobileEmailJp' => array('type' => 'text', 'null' => true, 'default' => NULL, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
                         'passwordValid' => array('type' => 'text', 'null' => true, 'default' => NULL, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
-                        'datetime_valid' => array('type' => 'text', 'null' => true, 'default' => NULL, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
+                        'datetime_valid' => array('type' => 'datetime', 'null' => true, 'default' => NULL),
                         );
 
     var $records = array(

@@ -434,5 +434,20 @@ class AddValidationRuleTestCase extends CakeTestCase
 
 	}
 
+	function testDateTimeField(){
+		$data = array(
+			'ValidationRule' => array(
+				'datetime_valid'=>array(
+					'year'	=>	'2013',
+					'month'	=>	'01',
+					'day'	=>	'24',
+				)
+			),
+		);
+		$this->ValidationRule->create( $data );
+		$this->assertTrue( $this->ValidationRule->validates() );
+		$this->assertEquals('2013-01-24 00:00:00',$this->ValidationRule->data['ValidationRule']['datetime_valid']);
+	}
+
 
 }
