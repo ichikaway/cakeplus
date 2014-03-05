@@ -364,7 +364,7 @@ class AddValidationRuleBehavior extends ModelBehavior {
 
 		$value = array_shift($wordvalue);
 
-		$pattern = '%^(.+) (\d+:\d+[APap][Mm])$|^(.+) (\d+:\d+)$%';
+		$pattern = '%^(.+) (\d+:\d+[APap][Mm])$|^(.+) (\d+:\d+|\d+:\d+:\d+)$%';
 		preg_match($pattern, $value, $match);
 		if(!empty($match[1]) && !empty($match[2])) {
 			$date = $match[1];
