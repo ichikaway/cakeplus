@@ -4,6 +4,7 @@
     "type": "cakephp-plugin",
     "keywords": ["cakephp", "validation"],
     "homepage": "https://github.com/ichikaway/cakeplus",
+    "license": "MIT",
     "authors": [
         {
             "name": "Yasushi Ichikawa",
