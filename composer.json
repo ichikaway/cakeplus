@@ -1,0 +1,26 @@
+{
+    "name": "ichikaway/cakeplus",
+    "description": "Cake plus is cakephp plugin and provides some functions for CakePHP.",
+    "type": "cakephp-plugin",
+    "keywords": ["cakephp", "validation"],
+    "homepage": "https://github.com/ichikaway/cakeplus",
+    "authors": [
+        {
+            "name": "Yasushi Ichikawa",
+            "homepage": "http://twitter.com/ichikaway",
+            "role": "Author"
+        },
+        {
+            "name": "Various Others",
+            "homepage": "https://github.com/ichikaway/cakeplus/graphs/contributors"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/ichikaway/cakeplus/issues",
+        "source": "https://github.com/ichikaway/cakeplus"
+    },
+    "require": {
+        "php": ">=5.3.0",
+        "composer/installers": "*"
+    },
+}
